@@ -11,8 +11,11 @@ export default function BottomTab({
   tela,
 }) {
   return (
+    // Barra de navegação inferior utilizada
+    // em todas as telas principais do EcoTrack.
     <View style={styles.container}>
 
+      {/* Acesso à tela inicial com visão geral das ocorrências */}
       <TouchableOpacity
         style={styles.item}
         onPress={function () {
@@ -38,6 +41,7 @@ export default function BottomTab({
         </Text>
       </TouchableOpacity>
 
+      {/* Exibe o ranking de trechos com maior criticidade */}
       <TouchableOpacity
         style={styles.item}
         onPress={function () {
@@ -62,7 +66,8 @@ export default function BottomTab({
           Ranking
         </Text>
       </TouchableOpacity>
-
+      
+      {/* Botão principal para registro de novas ocorrências em campo */}
       <TouchableOpacity
         style={styles.botaoCentral}
         onPress={function () {
@@ -79,6 +84,7 @@ export default function BottomTab({
         />
       </TouchableOpacity>
 
+      {/* Consulta do histórico completo de registros realizados */}
       <TouchableOpacity
         style={styles.item}
         onPress={function () {
@@ -104,6 +110,7 @@ export default function BottomTab({
         </Text>
       </TouchableOpacity>
 
+      {/* Área de informações e configurações do usuário */}
       <TouchableOpacity
         style={styles.item}
         onPress={function () {

@@ -26,11 +26,22 @@ import {
 
 const AZUL = '#5F21F3';
 
+/*
+ * Tela responsável pelo cadastro de novas
+ * ocorrências identificadas em campo.
+ *
+ * Permite registrar informações do trecho,
+ * criticidade, evidências fotográficas e
+ * localização da ocorrência.
+ */
+
 export default function RegistroScreen({
   setTela,
   setOcorrenciaSelecionada,
 }) {
 
+  // Função responsável por adicionar novas
+  // ocorrências ao contexto global da aplicação.
   const { adicionarOcorrencia, } = useOcorrencias();
 
   const [km, setKm] = useState('');
@@ -49,10 +60,13 @@ export default function RegistroScreen({
 
   const [foto, setFoto] = useState(null);
 
-    const [latitude, setLatitude] = useState('');
+  const [latitude, setLatitude] = useState('');
 
-    const [longitude, setLongitude] = useState('');
+  const [longitude, setLongitude] = useState('');
 
+  // Lista de tipos disponíveis para registro.
+  // Permite inclusão de categorias personalizadas
+  // criadas durante a utilização do aplicativo.
   const [tiposOcorrencia, setTiposOcorrencia] = useState([
       {
         nome: 'Vegetação',
@@ -91,6 +105,10 @@ export default function RegistroScreen({
 
   const descricaoRef = useRef(null);
 
+  /*
+ * Permite selecionar uma imagem da galeria
+ * para utilização como evidência da ocorrência.
+ */
   async function escolherFoto() {
 
     const permissao =
@@ -124,6 +142,7 @@ export default function RegistroScreen({
     }
   }
 
+  // Remove um tipo personalizado criado pelo usuário.
   function excluirTipo(nomeTipo) {
 
     const novaLista =
@@ -148,6 +167,13 @@ export default function RegistroScreen({
     }
   }
 
+  /*
+ * Captura a localização atual do dispositivo
+ * para complementar os dados do registro.
+ *
+ * Recurso nativo utilizado para auxiliar
+ * a identificação do trecho da rodovia.
+ */
   async function capturarLocalizacao() {
     const permissao =
       await Location.requestForegroundPermissionsAsync();
@@ -177,8 +203,14 @@ export default function RegistroScreen({
     );
   }
 
+  /*
+ * Valida os campos obrigatórios e realiza
+ * o cadastro da ocorrência no sistema.
+ */
   async function enviarOcorrencia() {
 
+    // Verifica se os campos obrigatórios
+    // foram preenchidos pelo usuário.
     if (
       !km ||
       !tipoOcorrencia ||
@@ -193,6 +225,8 @@ export default function RegistroScreen({
       return;
     }
 
+    // Estrutura da ocorrência armazenada
+    // e compartilhada entre as telas do aplicativo.
     const novaOcorrencia = {
 
       id: Date.now(),
@@ -216,6 +250,8 @@ export default function RegistroScreen({
 
       status: 'Em andamento',
 
+      // Define a pontuação utilizada no ranking
+      // com base no nível de criticidade.
       pontuacao:
         criticidade === 'Crítico'
           ? 10
@@ -225,6 +261,8 @@ export default function RegistroScreen({
           ? 5
           : 2,
 
+      // Cor utilizada para representação visual
+      // da criticidade nas telas do sistema.
       cor:
         criticidade === 'Crítico'
           ? '#C62828'
@@ -335,6 +373,7 @@ export default function RegistroScreen({
               </Text>
             </Text>
 
+            {/* Seleção da categoria da ocorrência registrada */}
             <TouchableOpacity
               style={styles.select}
 
@@ -606,6 +645,7 @@ export default function RegistroScreen({
               onChangeText={setDescricao}
             />
 
+            {/* Registro de evidências fotográficas */}
             <Text style={styles.label}>
               Fotos
             </Text>
@@ -648,6 +688,7 @@ export default function RegistroScreen({
 
             </TouchableOpacity>
 
+            {/* Captura da localização atual do dispositivo */}
             <Text style={styles.label}>
               Localização
             </Text>
@@ -686,6 +727,7 @@ export default function RegistroScreen({
 
           </View>
 
+          {/* Confirma e envia o registro da ocorrência */}
           <TouchableOpacity
             disabled={carregando}
 

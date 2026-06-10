@@ -19,6 +19,15 @@ import {
 
 const AZUL = '#5F21F3';
 
+/*
+ * Tela responsável pela visualização detalhada
+ * de uma ocorrência cadastrada no EcoTrack.
+ *
+ * Permite consultar informações, editar a
+ * descrição, atualizar o status e remover
+ * registros quando necessário.
+ */
+
 export default function DetalhesScreen({
   ocorrencia,
   setTela,
@@ -30,9 +39,13 @@ export default function DetalhesScreen({
     removerOcorrencia,
   } = useOcorrencias();
 
+  // Controla a exibição do modo de edição
+  // da descrição da ocorrência.
   const [modoEdicao, setModoEdicao] =
     useState(false);
 
+  // Mantém uma cópia local da descrição
+  // durante o processo de edição.  
   const [descricao, setDescricao] =
     useState(
 
@@ -72,6 +85,7 @@ export default function DetalhesScreen({
 
         <View style={styles.card}>
 
+          {/* Indicador visual da criticidade da ocorrência */}
           <View
             style={[
               styles.badge,
@@ -94,6 +108,7 @@ export default function DetalhesScreen({
             {ocorrencia.tipo}
           </Text>
 
+          {/* Resumo das principais informações do registro */}
           <View style={styles.tabela}>
 
             <View style={styles.linha}>
@@ -148,6 +163,7 @@ export default function DetalhesScreen({
             Descrição
           </Text>
 
+          {/* Modo de edição da descrição da ocorrência */}
           {modoEdicao ? (
 
             <>
@@ -167,6 +183,7 @@ export default function DetalhesScreen({
               <TouchableOpacity
                 style={styles.botaoSalvarDescricao}
 
+                // Persiste a nova descrição no contexto global.
                 onPress={function () {
 
                   editarDescricao(
@@ -189,6 +206,8 @@ export default function DetalhesScreen({
 
                 onPress={function () {
 
+                  // Solicita confirmação antes da remoção
+                  // definitiva do registro.
                   Alert.alert(
 
                     'Excluir Ocorrência',
@@ -238,6 +257,7 @@ export default function DetalhesScreen({
 
         </View>
 
+        {/* Ações disponíveis para gerenciamento da ocorrência */}
         <View style={styles.botoes}>
 
           <TouchableOpacity
@@ -258,6 +278,8 @@ export default function DetalhesScreen({
 
             onPress={function () {
 
+              // Atualiza o ciclo de vida da ocorrência:
+              // Aberta -> Em andamento -> Concluída
               Alert.alert(
 
                 'Atualizar Status',

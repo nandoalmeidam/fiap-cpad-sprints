@@ -8,6 +8,14 @@ import {
 import AsyncStorage from
 '@react-native-async-storage/async-storage';
 
+/*
+ * Contexto global responsável pelo gerenciamento
+ * das ocorrências da aplicação.
+ *
+ * Centraliza operações de leitura, atualização,
+ * remoção e persistência dos registros.
+ */
+
 const OcorrenciasContext =
   createContext();
 
@@ -20,6 +28,8 @@ export function OcorrenciasProvider({
     setOcorrenciaSelecionada,
   ] = useState(null);
 
+  // Dados iniciais utilizados quando não existem
+  // ocorrências persistidas no dispositivo.
   const [ocorrencias, setOcorrencias] =
     useState([
       {
@@ -63,6 +73,8 @@ export function OcorrenciasProvider({
       },
     ]);
 
+  // Mantém a persistência sincronizada sempre
+  // que a lista de ocorrências for alterada.
   useEffect(function () {
 
     async function carregarOcorrencias() {
@@ -111,6 +123,8 @@ export function OcorrenciasProvider({
     ]);
   }
 
+  // Fluxo de status:
+  // Aberta -> Em andamento -> Concluída
   function atualizarStatus(id) {
     const novaLista =
       ocorrencias.map(function (item) {
@@ -198,6 +212,7 @@ export function OcorrenciasProvider({
   );
 }
 
+// Hook de acesso ao contexto de ocorrências.
 export function useOcorrencias() {
   return useContext(
     OcorrenciasContext

@@ -20,21 +20,40 @@ import ConfirmacaoScreen from './screens/ConfirmacaoScreen';
 import RankingScreen from './screens/RankingScreen';
 import PerfilScreen from './screens/PerfilScreen';
 
+/*
+ * Componente principal do EcoTrack.
+ *
+ * Responsável pelo controle de navegação,
+ * autenticação e gerenciamento das telas
+ * da aplicação.
+ */
+
 export default function App() {
   const [usuario, setUsuario] = useState('');
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
   const [perfil, setPerfil] = useState('Supervisor');
+  // Armazena a ocorrência selecionada para
+  // visualização na tela de detalhes.
   const [ocorrenciaSelecionada, setOcorrenciaSelecionada] = useState(null);
   const [mostrarSenha, setMostrarSenha] = useState(false);
+  // Controla a tela atualmente exibida
+  // no fluxo principal da aplicação.
   const [tela, setTela] = useState('splash');
 
+  // Exibe a tela de abertura por alguns
+  // segundos antes de iniciar o fluxo de login.
   useEffect(function () {
     setTimeout(function () {
       setTela('login');
     }, 3000);
   }, []);
 
+  /*
+ * Realiza validações básicas dos campos
+ * informados antes de liberar o acesso
+ * ao sistema.
+ */
   function validarLogin() {
     if (usuario === '') {
       setErro('Digite seu e-mail.');
@@ -60,6 +79,10 @@ export default function App() {
     setTela('home');
   }
 
+  /*
+ * Limpa os dados da sessão atual e retorna
+ * o usuário para a tela de autenticação.
+ */
   function sairDoApp() {
     setUsuario('');
     setSenha('');
@@ -67,6 +90,11 @@ export default function App() {
     setTela('login');
   }
 
+  /*
+ * Navegação baseada no estado atual da aplicação.
+ * Cada valor da variável "tela" determina qual
+ * componente será exibido ao usuário.
+ */
   return (
     <OcorrenciasProvider>
       <SafeAreaView style={{ flex: 1 }}>
@@ -75,6 +103,7 @@ export default function App() {
           <SplashScreen />
         )}
 
+        {/* Tela de autenticação do usuário */}
         {tela === 'login' && (
           <SafeAreaView style={styles.container}>
             <View style={styles.card}>
@@ -231,10 +260,12 @@ export default function App() {
           </SafeAreaView>
         )}
 
+        {/* Dashboard principal do sistema */}
         {tela === 'home' && (
           <HomeScreen setTela={setTela} />
         )}
 
+        {/* Cadastro de novas ocorrências */}
         {tela === 'registro' && (
           <RegistroScreen
             setTela={setTela}
@@ -245,6 +276,7 @@ export default function App() {
           />
         )}
 
+        {/* Consulta dos registros cadastrados */}
         {tela === 'historico' && (
           <HistoricoScreen
             setTela={setTela}
@@ -254,12 +286,14 @@ export default function App() {
           />
         )}
 
+        {/* Priorização das ocorrências por criticidade */}
         {tela === 'ranking' && (
           <RankingScreen
             setTela={setTela}
           />
         )}
 
+        {/* Visualização completa de uma ocorrência */}
         {tela === 'detalhes' &&
           ocorrenciaSelecionada && (
             <DetalhesScreen
@@ -268,6 +302,7 @@ export default function App() {
             />
         )}
 
+        {/* Informações e configurações do usuário */}
         {tela === 'perfil' && (
           <PerfilScreen
             setTela={setTela}
@@ -275,6 +310,7 @@ export default function App() {
           />
         )}
 
+        {/* Feedback após o envio de uma ocorrência */}
         {tela === 'confirmacao' && (
           <ConfirmacaoScreen
             setTela={setTela}

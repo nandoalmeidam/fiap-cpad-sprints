@@ -7,6 +7,13 @@ import {
 
 const AZUL = '#5F21F3';
 
+/*
+ * Tela de abertura do EcoTrack.
+ *
+ * Responsável por apresentar a identidade
+ * visual da aplicação durante a inicialização.
+ */
+
 export default function SplashScreen() {
 
   return (
@@ -30,6 +37,7 @@ export default function SplashScreen() {
         e Priorização da Faixa de Domínio
       </Text>
 
+      {/* Indicador visual de carregamento da aplicação */}
       <View style={styles.barraContainer}>
 
         <Text style={styles.carregando}>
@@ -44,6 +52,7 @@ export default function SplashScreen() {
 
       </View>
 
+      {/* Informações institucionais do projeto */}
       <View style={styles.rodapeContainer}>
 
         <Text style={styles.rodape}>

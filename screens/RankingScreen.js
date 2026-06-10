@@ -13,14 +13,28 @@ import { useState, } from 'react';
 import BottomTab from '../components/BottomTab';
 import { useOcorrencias, } from '../context/OcorrenciasContext';
 
+/*
+ * Tela responsável pela visualização do ranking
+ * de ocorrências registradas no EcoTrack.
+ *
+ * Os registros são organizados por nível de
+ * criticidade para apoiar a priorização das ações
+ * de conservação e manutenção.
+ */
+
 export default function RankingScreen({
   setTela,
   tela="ranking"
 }) {
   const { ocorrencias } =  useOcorrencias();
+  // Termo utilizado para filtrar os registros
+  // pelo KM informado pelo usuário.
   const [buscaKm, setBuscaKm] = useState('');
+  // Controla a exibição do menu de ações rápidas.
   const [mostrarMenu, setMostrarMenu] = useState(false);
 
+  // Agrupa as ocorrências críticas para compor
+  // as primeiras posições do ranking.
   const ocorrenciasCriticas =
     ocorrencias.filter(function (item) {
       return item.criticidade === 'Crítico' && item.km.includes(buscaKm);
@@ -67,6 +81,8 @@ export default function RankingScreen({
         <TouchableOpacity
           onPress={function () {
 
+            // Exibe feedback quando não existem
+            // notificações pendentes para o usuário.
             Alert.alert(
               'Notificações',
               'Você não possui notificações no momento.'
@@ -84,6 +100,7 @@ export default function RankingScreen({
 
       </View>
 
+      {/* Menu de navegação e ações complementares */}
       {mostrarMenu && (
         <View style={styles.menuBox}>
 
@@ -141,6 +158,7 @@ export default function RankingScreen({
 
         <View style={styles.topoFiltro}>
 
+          {/* Filtro rápido para localização de trechos específicos */}
           <TextInput
             style={styles.select}
             placeholder="Buscar KM"
@@ -156,6 +174,7 @@ export default function RankingScreen({
 
         </View>
 
+        {/* Relação de ocorrências ordenadas por criticidade */}
         <View style={styles.tabela}>
 
           <View style={styles.linhaHeader}>
@@ -403,6 +422,8 @@ export default function RankingScreen({
 
           <TouchableOpacity
             style={styles.botao}
+            // Direciona para a consulta completa
+            // das ocorrências registradas.
             onPress={function () {
               setTela('historico');
             }}

@@ -13,11 +13,20 @@ import BottomTab from '../components/BottomTab';
 
 const AZUL = '#5F21F3';
 
+/*
+ * Tela de perfil do usuário.
+ *
+ * Apresenta informações operacionais,
+ * opções de configuração e ações de conta.
+ */
+
 export default function PerfilScreen({
   setTela,
   sairDoApp,
 }) {
 
+  // Armazena a data e hora da última
+  // sincronização realizada pelo usuário.
   const [ultimaSincronizacao, setUltimaSincronizacao] = useState('20/05/2026 - 14:45');
 
   return (
@@ -87,6 +96,7 @@ export default function PerfilScreen({
           Informações
         </Text>
 
+        {/* Informações operacionais do colaborador */}
         <View style={styles.infoCard}>
 
           <View style={styles.infoLinha}>
@@ -149,6 +159,7 @@ export default function PerfilScreen({
 
         </View>
 
+        {/* Ações e configurações disponíveis para o usuário */}
         <View style={styles.menuCard}>
 
           <TouchableOpacity
@@ -176,6 +187,8 @@ export default function PerfilScreen({
 
           <TouchableOpacity
             style={styles.menuLinha}
+              // Atualiza a data da última sincronização
+              // e exibe confirmação para o usuário.
               onPress={function () {
                 const agora =
                   new Date();
@@ -269,6 +282,7 @@ export default function PerfilScreen({
 
         </View>
 
+        {/* Encerra a sessão atual do aplicativo */}
         <TouchableOpacity
           style={styles.botaoSair}
           onPress={sairDoApp}

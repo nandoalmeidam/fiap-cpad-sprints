@@ -17,12 +17,22 @@ import {
 
 const AZUL = '#5F21F3';
 
+/*
+ * Dashboard principal do EcoTrack.
+ *
+ * Apresenta indicadores operacionais,
+ * ranking de criticidade e acesso rápido
+ * às funcionalidades mais utilizadas.
+ */
+
 export default function HomeScreen({
   setTela,
 }) {
 
   const { ocorrencias, } = useOcorrencias();
 
+  // Ocorrências organizadas por nível de criticidade
+  // para composição do ranking operacional.
   const ocorrenciasCriticas =
     ocorrencias.filter(function (item) {
 
@@ -55,6 +65,7 @@ export default function HomeScreen({
       );
     });
 
+  // Indicadores exibidos nos cards de resumo da Home.
   const abertas = ocorrencias.filter(
     function (item) {
       return item.status === 'Aberta';
@@ -89,6 +100,7 @@ export default function HomeScreen({
     }
   ).length;
 
+  // Controla a exibição do menu de ações rápidas.
   const [mostrarMenu, setMostrarMenu] = useState(false);
 
   return (
@@ -122,6 +134,8 @@ export default function HomeScreen({
         <TouchableOpacity
           onPress={function () {
 
+            // Exibe feedback quando não existem
+            // notificações pendentes para o usuário.
             Alert.alert(
               'Notificações',
               'Você não possui notificações no momento.'
@@ -279,6 +293,7 @@ export default function HomeScreen({
 
         </View>
 
+        {/* Ranking resumido dos trechos com maior criticidade */}
         <View style={styles.cardRanking}>
 
           <View style={styles.rankingHeader}>
@@ -288,6 +303,8 @@ export default function HomeScreen({
             </Text>
 
             <TouchableOpacity
+              // Direciona para a visualização completa
+              // do ranking de ocorrências.
               onPress={function () {
                 setTela('ranking');
               }}
@@ -530,10 +547,13 @@ export default function HomeScreen({
 
         </View>
 
+        {/* Acessos rápidos para registro e consulta de ocorrências */}
         <View style={styles.acoesContainer}>
 
           <TouchableOpacity
             style={styles.cardAcao}
+            // Abre o formulário para cadastro
+            // de uma nova ocorrência em campo.
             onPress={function () {
               setTela('registro');
             }}
@@ -560,6 +580,8 @@ export default function HomeScreen({
 
           <TouchableOpacity
             style={styles.cardAcao}
+            // Navega para a consulta dos registros
+            // já cadastrados no sistema.
             onPress={function () {
               setTela('historico');
             }}

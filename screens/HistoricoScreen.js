@@ -14,6 +14,14 @@ import {
   useOcorrencias,
 } from '../context/OcorrenciasContext';
 
+/*
+ * Tela responsável pela consulta do histórico
+ * de ocorrências registradas no sistema.
+ *
+ * Permite filtrar registros por status e
+ * acessar os detalhes de cada ocorrência.
+ */
+
 export default function HistoricoScreen({
   setTela,
   setOcorrenciaSelecionada,
@@ -22,8 +30,12 @@ export default function HistoricoScreen({
     ocorrencias,
   } = useOcorrencias();
 
+  // Status atualmente selecionado para filtragem
+  // das ocorrências exibidas na lista.
   const [filtro, setFiltro] = useState('Todas');
 
+  // Aplica o filtro selecionado pelo usuário.
+  // Quando "Todas" estiver ativo, exibe a lista completa.
   const ocorrenciasFiltradas =
     filtro === 'Todas'
       ? ocorrencias
@@ -37,8 +49,6 @@ export default function HistoricoScreen({
       <View style={styles.header}>
 
         <TouchableOpacity
-          style={{ zIndex: 1 }}
-
           onPress={() =>
             setTela('home')
           }
@@ -57,6 +67,7 @@ export default function HistoricoScreen({
 
       </View>
 
+      {/* Filtros rápidos por status da ocorrência */}
       <View style={styles.tabs}>
 
         <TouchableOpacity
@@ -137,6 +148,7 @@ export default function HistoricoScreen({
 
       </View>
 
+      {/* Área de busca e filtros complementares */}
       <View style={styles.buscaRow}>
 
         <View style={styles.buscaBox}>
@@ -170,6 +182,7 @@ export default function HistoricoScreen({
         }}
       >
 
+        {/* Lista de ocorrências disponíveis para consulta */}
         <View style={styles.lista}>
 
           {ocorrenciasFiltradas.map(
@@ -179,6 +192,8 @@ export default function HistoricoScreen({
                 <TouchableOpacity
                   key={item.id}
                   style={styles.card}
+                  // Armazena a ocorrência selecionada e
+                  // direciona o usuário para a tela de detalhes.
                   onPress={function () {
                     setOcorrenciaSelecionada(item);
                     setTela('detalhes');

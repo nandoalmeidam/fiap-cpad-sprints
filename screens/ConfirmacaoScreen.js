@@ -10,6 +10,14 @@ import BottomTab from '../components/BottomTab';
 
 const AZUL = '#5F21F3';
 
+/*
+ * Tela exibida após o registro bem-sucedido
+ * de uma ocorrência.
+ *
+ * Apresenta o protocolo gerado e permite
+ * o retorno rápido para a tela inicial.
+ */
+
 export default function ConfirmacaoScreen({
   setTela,
   ocorrenciaSelecionada,
@@ -36,6 +44,7 @@ export default function ConfirmacaoScreen({
           operacional.
         </Text>
 
+        {/* Resumo do protocolo gerado para acompanhamento da ocorrência */}
         <View style={styles.card}>
 
           <Image
@@ -66,6 +75,7 @@ export default function ConfirmacaoScreen({
 
         </View>
 
+        {/* Retorna o usuário para a tela principal do aplicativo */}
         <TouchableOpacity
           style={styles.botao}
           onPress={function () {
