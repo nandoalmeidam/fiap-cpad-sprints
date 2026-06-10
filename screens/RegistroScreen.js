@@ -15,8 +15,8 @@ import {
   Image,
 } from 'react-native';
 
-import * as ImagePicker
-from 'expo-image-picker';
+import * as ImagePicker from 'expo-image-picker';
+import * as Location from 'expo-location';
 
 import BottomTab from '../components/BottomTab';
 
@@ -31,43 +31,29 @@ export default function RegistroScreen({
   setOcorrenciaSelecionada,
 }) {
 
-  const {
-    adicionarOcorrencia,
-  } = useOcorrencias();
+  const { adicionarOcorrencia, } = useOcorrencias();
 
   const [km, setKm] = useState('');
 
-  const [tipoOcorrencia,
-    setTipoOcorrencia] =
-    useState('');
+  const [tipoOcorrencia, setTipoOcorrencia] = useState('');
 
-  const [mostrarTipos,
-    setMostrarTipos] =
-    useState(false);
+  const [mostrarTipos, setMostrarTipos] = useState(false);
 
-  const [criticidade,
-    setCriticidade] =
-    useState('');
+  const [criticidade, setCriticidade] = useState('');
 
-  const [mostrarCriticidades,
-    setMostrarCriticidades] =
-    useState(false);
+  const [mostrarCriticidades, setMostrarCriticidades] = useState(false);
 
-  const [descricao,
-    setDescricao] =
-    useState('');
+  const [descricao, setDescricao] = useState('');
 
-  const [carregando,
-    setCarregando] =
-    useState(false);
+  const [carregando, setCarregando] = useState(false);
 
-  const [foto,
-    setFoto] =
-    useState(null);
+  const [foto, setFoto] = useState(null);
 
-  const [tiposOcorrencia,
-    setTiposOcorrencia] =
-    useState([
+    const [latitude, setLatitude] = useState('');
+
+    const [longitude, setLongitude] = useState('');
+
+  const [tiposOcorrencia, setTiposOcorrencia] = useState([
       {
         nome: 'Vegetação',
         personalizado: false,
@@ -99,16 +85,11 @@ export default function RegistroScreen({
       },
     ]);
 
-  const [novoTipo,
-    setNovoTipo] =
-    useState('');
+  const [novoTipo, setNovoTipo] = useState('');
 
-  const [mostrandoInputTipo,
-    setMostrandoInputTipo] =
-    useState(false);
+  const [mostrandoInputTipo, setMostrandoInputTipo] = useState(false);
 
-  const descricaoRef =
-    useRef(null);
+  const descricaoRef = useRef(null);
 
   async function escolherFoto() {
 
@@ -167,6 +148,35 @@ export default function RegistroScreen({
     }
   }
 
+  async function capturarLocalizacao() {
+    const permissao =
+      await Location.requestForegroundPermissionsAsync();
+
+    if (permissao.status !== 'granted') {
+
+      alert(
+        'Permissão para acessar localização negada.'
+      );
+
+      return;
+    }
+
+    const localizacaoAtual =
+      await Location.getCurrentPositionAsync({});
+
+    setLatitude(
+      String(localizacaoAtual.coords.latitude)
+    );
+
+    setLongitude(
+      String(localizacaoAtual.coords.longitude)
+    );
+
+    alert(
+      'Localização capturada com sucesso.'
+    );
+  }
+
   async function enviarOcorrencia() {
 
     if (
@@ -199,6 +209,10 @@ export default function RegistroScreen({
       descricao,
 
       foto,
+
+      latitude,
+
+      longitude,
 
       status: 'Em andamento',
 
@@ -640,6 +654,7 @@ export default function RegistroScreen({
 
             <TouchableOpacity
               style={styles.localizacaoBox}
+              onPress={capturarLocalizacao}
             >
 
               <Image
@@ -648,10 +663,26 @@ export default function RegistroScreen({
                 />
 
               <Text style={styles.localizacaoTexto}>
-                Capturar localização atual
+                {latitude && longitude
+                  ? 'Localização capturada'
+                  : 'Capturar localização atual'}
               </Text>
 
             </TouchableOpacity>
+
+            {latitude && longitude && (
+              <View style={styles.localizacaoResultado}>
+
+                <Text style={styles.localizacaoResultadoTexto}>
+                  Latitude: {latitude}
+                </Text>
+
+                <Text style={styles.localizacaoResultadoTexto}>
+                  Longitude: {longitude}
+                </Text>
+
+              </View>
+            )}
 
           </View>
 
@@ -937,6 +968,7 @@ const styles = StyleSheet.create({
     color: '#999',
     fontSize: 15,
     fontWeight: 'bold',
+    marginLeft: 10,
   },
 
   botao: {
@@ -953,6 +985,21 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+
+  localizacaoResultado: {
+    backgroundColor: '#F5F6FA',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 12,
+    padding: 12,
+    marginTop: 10,
+  },
+
+  localizacaoResultadoTexto: {
+    color: '#374151',
+    fontSize: 13,
+    marginBottom: 4,
   },
 
 });

@@ -1,3 +1,4 @@
+import { useState  } from 'react';
 import {
   View,
   Text,
@@ -5,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Alert,
 } from 'react-native';
 
 import BottomTab from '../components/BottomTab';
@@ -15,6 +17,9 @@ export default function PerfilScreen({
   setTela,
   sairDoApp,
 }) {
+
+  const [ultimaSincronizacao, setUltimaSincronizacao] = useState('20/05/2026 - 14:45');
+
   return (
     <View style={styles.container}>
 
@@ -171,6 +176,22 @@ export default function PerfilScreen({
 
           <TouchableOpacity
             style={styles.menuLinha}
+              onPress={function () {
+                const agora =
+                  new Date();
+
+                const dataHora =
+                  agora.toLocaleString('pt-BR');
+
+                setUltimaSincronizacao(
+                  dataHora
+                );
+
+                Alert.alert(
+                  'Sincronização',
+                  'Dados sincronizados com sucesso.'
+                );
+              }}
           >
 
             <View style={styles.menuEsquerda}>
@@ -187,8 +208,7 @@ export default function PerfilScreen({
                 </Text>
 
                 <Text style={styles.subtexto}>
-                  Última sincronização:
-                  20/05/2026 - 14:45
+                  Última sincronização: {ultimaSincronizacao}
                 </Text>
 
               </View>
@@ -441,7 +461,7 @@ const styles = StyleSheet.create({
   },
 
   subtexto: {
-    fontSize: 12,
+    fontSize: 11,
     color: '#999',
     marginTop: 2,
   },

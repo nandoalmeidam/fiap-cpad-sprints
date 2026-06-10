@@ -18,8 +18,8 @@ export default function RankingScreen({
   tela="ranking"
 }) {
   const { ocorrencias } =  useOcorrencias();
-
   const [buscaKm, setBuscaKm] = useState('');
+  const [mostrarMenu, setMostrarMenu] = useState(false);
 
   const ocorrenciasCriticas =
     ocorrencias.filter(function (item) {
@@ -49,10 +49,16 @@ export default function RankingScreen({
 
       <View style={styles.header}>
 
-        <Image
-          source={require('../assets/icons/iconeMenuBranco.png')}
-          style={{ width: 30, height: 30 }}
-        />
+        <TouchableOpacity
+          onPress={function () {
+            setMostrarMenu(!mostrarMenu);
+          }}
+        >
+          <Image
+            source={require('../assets/icons/iconeMenuBranco.png')}
+            style={{ width: 30, height: 30 }}
+          />
+        </TouchableOpacity>
 
         <Text style={styles.headerTitulo}>
           Ranking de KMs Críticos
@@ -77,6 +83,55 @@ export default function RankingScreen({
         </TouchableOpacity>
 
       </View>
+
+      {mostrarMenu && (
+        <View style={styles.menuBox}>
+
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={function () {
+              setTela('perfil');
+            }}
+          >
+            <Text style={styles.menuTexto}>
+              Minha Conta
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.menuItem}>
+            <Text style={styles.menuTexto}>
+              Configurações
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.menuItem}>
+            <Text style={styles.menuTexto}>
+              Ajuda
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.menuItem}>
+            <Text style={styles.menuTexto}>
+              Sobre
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.menuItem,
+              { borderBottomWidth: 0 },
+            ]}
+            onPress={function () {
+              setTela('login');
+            }}
+          >
+            <Text style={styles.menuTextoLogout}>
+              Logout
+            </Text>
+          </TouchableOpacity>
+
+        </View>
+      )}
 
       <ScrollView
         contentContainerStyle={{
@@ -392,11 +447,6 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 18,
     fontWeight: 'bold',
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    textAlign: 'center',
-    bottom: 18,
   },
 
   icon: {
@@ -521,6 +571,34 @@ const styles = StyleSheet.create({
   botaoTexto: {
     color: '#FFF',
     fontSize: 16,
+    fontWeight: 'bold',
+  },
+
+  menuBox: {
+    backgroundColor: '#FFF',
+    marginHorizontal: 18,
+    marginTop: 14,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: '#ECECEC',
+  },
+
+  menuItem: {
+    paddingVertical: 16,
+    paddingHorizontal: 18,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F1F1F1',
+  },
+
+  menuTexto: {
+    fontSize: 15,
+    color: '#111827',
+    fontWeight: '600',
+  },
+
+  menuTextoLogout: {
+    fontSize: 15,
+    color: '#E53935',
     fontWeight: 'bold',
   },
 });
