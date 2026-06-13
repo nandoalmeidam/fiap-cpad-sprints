@@ -27,6 +27,7 @@ const AZUL = '#5F21F3';
 
 export default function HomeScreen({
   setTela,
+  sairDoApp,
 }) {
 
   const { ocorrencias, } = useOcorrencias();
@@ -234,7 +235,8 @@ export default function HomeScreen({
             ]}
 
             onPress={function () {
-              setTela('login');
+              setMostrarMenu(false);
+              sairDoApp();
             }}
           >
             <Text style={styles.menuTextoLogout}>

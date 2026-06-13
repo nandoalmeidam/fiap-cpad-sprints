@@ -7,6 +7,7 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
+  Alert,
 } from 'react-native';
 import SplashScreen from './screens/SplashScreen';
 import HomeScreen from './screens/HomeScreen';
@@ -172,7 +173,16 @@ export default function App() {
                   </Text>
                 )}
 
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={function () {
+
+                  Alert.alert(
+                    'Recuperação de Senha',
+                    'Entre em contato com a supervisão responsável para redefinir sua senha.'
+                  );
+
+                }}
+              >
                 <Text style={styles.esqueciSenha}>
                   Esqueci minha senha
                 </Text>
@@ -245,8 +255,7 @@ export default function App() {
 
               <TouchableOpacity
                 style={styles.botao}
-                // onPress={validarLogin}
-                onPress={() => setTela('home')}
+                onPress={validarLogin}
               >
                 <Text style={styles.botaoTexto}>
                   Entrar
@@ -262,7 +271,10 @@ export default function App() {
 
         {/* Dashboard principal do sistema */}
         {tela === 'home' && (
-          <HomeScreen setTela={setTela} />
+          <HomeScreen
+            setTela={setTela}
+            sairDoApp={sairDoApp}
+          />
         )}
 
         {/* Cadastro de novas ocorrências */}
@@ -290,6 +302,7 @@ export default function App() {
         {tela === 'ranking' && (
           <RankingScreen
             setTela={setTela}
+            sairDoApp={sairDoApp}
           />
         )}
 

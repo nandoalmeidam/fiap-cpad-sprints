@@ -24,6 +24,7 @@ import { useOcorrencias, } from '../context/OcorrenciasContext';
 
 export default function RankingScreen({
   setTela,
+  sairDoApp,
 }) {
   const { ocorrencias } =  useOcorrencias();
   // Termo utilizado para filtrar os registros
@@ -214,7 +215,8 @@ export default function RankingScreen({
               { borderBottomWidth: 0 },
             ]}
             onPress={function () {
-              setTela('login');
+              setMostrarMenu(false);
+              sairDoApp();
             }}
           >
             <Text style={styles.menuTextoLogout}>
