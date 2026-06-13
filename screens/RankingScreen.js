@@ -24,7 +24,6 @@ import { useOcorrencias, } from '../context/OcorrenciasContext';
 
 export default function RankingScreen({
   setTela,
-  tela="ranking"
 }) {
   const { ocorrencias } =  useOcorrencias();
   // Termo utilizado para filtrar os registros

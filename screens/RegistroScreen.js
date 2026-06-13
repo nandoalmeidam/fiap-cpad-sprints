@@ -309,23 +309,19 @@ export default function RegistroScreen({
         <View style={styles.header}>
 
           <TouchableOpacity
-            style={{ zIndex: 1 }}
-
-            onPress={function () {
-              setTela('home');
-            }}
+            onPress={() => setTela('home')}
           >
-
             <Image
               source={require('../assets/icons/iconeVoltarHeaderBranco.png')}
               style={{ width: 22, height: 22 }}
             />
-
           </TouchableOpacity>
 
           <Text style={styles.headerTitulo}>
             Registro de Ocorrência
           </Text>
+
+          <View style={{ width: 22 }} />
 
         </View>
 
@@ -796,11 +792,6 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 18,
     fontWeight: 'bold',
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    textAlign: 'center',
-    bottom: 18,
   },
 
   cardFormulario: {

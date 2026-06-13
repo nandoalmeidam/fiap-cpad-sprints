@@ -49,21 +49,21 @@ export default function HistoricoScreen({
       <View style={styles.header}>
 
         <TouchableOpacity
-          onPress={() =>
-            setTela('home')
-          }
+          onPress={function () {
+            setTela('home');
+          }}
         >
-
           <Image
-              source={require('../assets/icons/iconeVoltarHeaderBranco.png')}
-              style={{ width: 22, height: 22 }}
-            />
-
+            source={require('../assets/icons/iconeVoltarHeaderBranco.png')}
+            style={{ width: 22, height: 22 }}
+          />
         </TouchableOpacity>
 
         <Text style={styles.headerTitulo}>
           Histórico de Ocorrências
         </Text>
+
+        <View style={{ width: 22 }} />
 
       </View>
 
@@ -314,11 +314,6 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 18,
     fontWeight: 'bold',
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    textAlign: 'center',
-    bottom: 18,
   },
 
   tabs: {
