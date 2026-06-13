@@ -4,6 +4,7 @@ node_modules/
 # Expo
 .expo/
 .expo-shared/
+.expo/web/
 dist/
 web-build/
 expo-env.d.ts
@@ -34,11 +35,18 @@ yarn-error.log*
 *.mobileprovision
 *.pem
 
+# Android builds
+*.apk
+*.aab
+
 # TypeScript
 *.tsbuildinfo
 
 # Kotlin
 .kotlin/
+
+# VS Code
+.vscode/
 
 # macOS
 .DS_Store
