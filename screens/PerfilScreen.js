@@ -41,6 +41,12 @@ export default function PerfilScreen({
 
   const [confirmarSenha, setConfirmarSenha] = useState('');
 
+  // Controla a visualização da nova senha.
+  const [mostrarNovaSenha, setMostrarNovaSenha] = useState(false);
+
+  // Controla a visualização da confirmação.
+  const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState(false);
+
   // Preferências simuladas
   const [notificacoesAtivas, setNotificacoesAtivas] = useState(true);
 
@@ -348,25 +354,71 @@ export default function PerfilScreen({
                 Nova senha
               </Text>
 
-              <TextInput
-                style={styles.inputSenha}
-                secureTextEntry
-                value={novaSenha}
-                onChangeText={setNovaSenha}
-                placeholder="Digite a nova senha"
-              />
+              <View style={styles.inputSenhaContainer}>
+
+                <TextInput
+                  style={styles.inputSenhaComIcone}
+                  secureTextEntry={!mostrarNovaSenha}
+                  value={novaSenha}
+                  onChangeText={setNovaSenha}
+                  placeholder="Digite a nova senha"
+                />
+
+                <TouchableOpacity
+                  onPress={function () {
+                    setMostrarNovaSenha(
+                      !mostrarNovaSenha
+                    );
+                  }}
+                >
+
+                  <Image
+                    source={
+                      mostrarNovaSenha
+                        ? require('../assets/icons/iconeOlhoAbertoCinza.png')
+                        : require('../assets/icons/iconeOlhoFechadoCinza.png')
+                    }
+                    style={styles.eyeIcon}
+                  />
+
+                </TouchableOpacity>
+
+              </View>
 
               <Text style={styles.senhaLabel}>
                 Confirmar senha
               </Text>
 
-              <TextInput
-                style={styles.inputSenha}
-                secureTextEntry
-                value={confirmarSenha}
-                onChangeText={setConfirmarSenha}
-                placeholder="Confirme a nova senha"
-              />
+              <View style={styles.inputSenhaContainer}>
+
+                <TextInput
+                  style={styles.inputSenhaComIcone}
+                  secureTextEntry={!mostrarConfirmarSenha}
+                  value={confirmarSenha}
+                  onChangeText={setConfirmarSenha}
+                  placeholder="Confirme a nova senha"
+                />
+
+                <TouchableOpacity
+                  onPress={function () {
+                    setMostrarConfirmarSenha(
+                      !mostrarConfirmarSenha
+                    );
+                  }}
+                >
+
+                  <Image
+                    source={
+                      mostrarConfirmarSenha
+                        ? require('../assets/icons/iconeOlhoAbertoCinza.png')
+                        : require('../assets/icons/iconeOlhoFechadoCinza.png')
+                    }
+                    style={styles.eyeIcon}
+                  />
+
+                </TouchableOpacity>
+
+              </View>
 
               <TouchableOpacity
                 style={styles.botaoSalvarSenha}
@@ -1005,14 +1057,25 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
 
-  inputSenha: {
+  inputSenhaContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     borderWidth: 1,
     borderColor: '#DDD',
     borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginBottom: 12,
     backgroundColor: '#FFF',
+    paddingHorizontal: 12,
+    marginBottom: 12,
+  },
+
+  inputSenhaComIcone: {
+    flex: 1,
+    paddingVertical: 10,
+  },
+
+  eyeIcon: {
+    width: 22,
+    height: 22,
   },
 
   botaoSalvarSenha: {

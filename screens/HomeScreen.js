@@ -158,6 +158,12 @@ export default function HomeScreen({
 
           <TouchableOpacity
             style={styles.menuItem}
+            onPress={function () {
+
+              setMostrarMenu(false);
+              setTela('perfil');
+
+            }}
           >
             <Text style={styles.menuTexto}>
               Minha Conta
@@ -166,6 +172,19 @@ export default function HomeScreen({
 
           <TouchableOpacity
             style={styles.menuItem}
+
+            onPress={function () {
+
+              setMostrarMenu(false);
+
+              Alert.alert(
+                'Configurações',
+                'As configurações do aplicativo podem ser acessadas na tela de Perfil.'
+              );
+
+              setTela('perfil');
+
+            }}
           >
             <Text style={styles.menuTexto}>
               Configurações
@@ -174,17 +193,35 @@ export default function HomeScreen({
 
           <TouchableOpacity
             style={styles.menuItem}
-          >
-            <Text style={styles.menuTexto}>
-              Ajuda
-            </Text>
-          </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.menuItem}
+            onPress={function () {
+
+              setMostrarMenu(false);
+
+              Alert.alert(
+                'Sobre o EcoTrack',
+
+                '🌱 EcoTrack\n\n' +
+
+                'Aplicativo desenvolvido para a Sprint 2 da disciplina Cross-Platform Application Development (FIAP).\n\n' +
+
+                'A solução auxilia equipes de campo e supervisores no registro, acompanhamento e priorização de ocorrências relacionadas à conservação da faixa de domínio das rodovias.\n\n' +
+
+                '👨‍💻 Equipe de Desenvolvimento\n\n' +
+
+                '• Bruno Anselmo Da Silva - RM 566521\n' +
+                '• Fernando de Almeida Godoi Martines - RM 564820\n' +
+                '• Gabriel Ber Soares Tarone - RM 563520\n' +
+                '• Guilherme de Freitas Salgado - RM 562494\n' +
+                '• Vinicius Ribeiro Dias - RM 566468\n\n' +
+
+                '🎓 FIAP • 2026'
+              );
+
+            }}
           >
             <Text style={styles.menuTexto}>
-              Sobre
+              Sobre o App
             </Text>
           </TouchableOpacity>
 

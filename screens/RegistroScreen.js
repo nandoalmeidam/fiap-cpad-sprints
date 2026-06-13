@@ -684,6 +684,25 @@ export default function RegistroScreen({
 
             </TouchableOpacity>
 
+            {/* Permite remover a foto selecionada */}
+            {foto && (
+
+              <TouchableOpacity
+                style={styles.botaoRemoverFoto}
+
+                onPress={function () {
+                  setFoto(null);
+                }}
+              >
+
+                <Text style={styles.textoRemoverFoto}>
+                  Remover foto
+                </Text>
+
+              </TouchableOpacity>
+
+            )}
+
             {/* Captura da localização atual do dispositivo */}
             <Text style={styles.label}>
               Localização
@@ -1033,6 +1052,22 @@ const styles = StyleSheet.create({
     color: '#374151',
     fontSize: 13,
     marginBottom: 4,
+  },
+
+  botaoRemoverFoto: {
+    alignSelf: 'center',
+    marginTop: 12,
+    marginBottom: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    borderWidth: 1,
+    borderColor: '#E53935',
+    borderRadius: 12,
+  },
+
+  textoRemoverFoto: {
+    color: '#E53935',
+    fontWeight: 'bold',
   },
 
 });

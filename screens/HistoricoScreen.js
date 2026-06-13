@@ -26,22 +26,36 @@ export default function HistoricoScreen({
   setTela,
   setOcorrenciaSelecionada,
 }) {
-  const {
-    ocorrencias,
-  } = useOcorrencias();
+  const { ocorrencias, } = useOcorrencias();
 
   // Status atualmente selecionado para filtragem
   // das ocorrências exibidas na lista.
   const [filtro, setFiltro] = useState('Todas');
 
-  // Aplica o filtro selecionado pelo usuário.
-  // Quando "Todas" estiver ativo, exibe a lista completa.
-  const ocorrenciasFiltradas =
-    filtro === 'Todas'
-      ? ocorrencias
-      : ocorrencias.filter(function (item) {
-          return item.status === filtro;
-        });
+  // Controla a exibição dos filtros complementares.
+  const [mostrarFiltros, setMostrarFiltros] = useState(false);
+
+  // Criticidade selecionada para filtragem.
+  const [filtroCriticidade, setFiltroCriticidade] = useState('Todas');
+
+  // Aplica os filtros de status e criticidade
+  // selecionados pelo usuário.
+  const ocorrenciasFiltradas = ocorrencias.filter(function (item) {
+
+      const statusValido =
+        filtro === 'Todas' ||
+        item.status === filtro;
+
+      const criticidadeValida =
+        filtroCriticidade === 'Todas' ||
+        item.criticidade === filtroCriticidade;
+
+      return (
+        statusValido &&
+        criticidadeValida
+      );
+
+    });
 
   return (
     <View style={styles.container}>
@@ -167,6 +181,14 @@ export default function HistoricoScreen({
 
         <TouchableOpacity
           style={styles.filtro}
+
+          // Exibe ou oculta filtros
+          // complementares do histórico.
+          onPress={function () {
+            setMostrarFiltros(
+              !mostrarFiltros
+            );
+          }}
         >
           <Image
             source={require('../assets/icons/iconeMenuHistoricoDeOcorrenciasCinza.png')}
@@ -175,6 +197,120 @@ export default function HistoricoScreen({
         </TouchableOpacity>
 
       </View>
+
+      {/* Filtros por criticidade */}
+      {mostrarFiltros && (
+
+        <View style={styles.filtrosContainer}>
+
+          <TouchableOpacity
+            style={[
+              styles.filtroChip,
+              filtroCriticidade === 'Todas' &&
+              styles.filtroChipAtivo,
+            ]}
+            onPress={function () {
+              setFiltroCriticidade('Todas');
+            }}
+          >
+            <Text
+              style={[
+                styles.filtroTextoChip,
+                filtroCriticidade === 'Todas' &&
+                styles.filtroTextoChipAtivo,
+              ]}
+            >
+              Todas
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.filtroChip,
+              filtroCriticidade === 'Crítico' &&
+              styles.filtroChipAtivo,
+            ]}
+            onPress={function () {
+              setFiltroCriticidade('Crítico');
+            }}
+          >
+            <Text
+              style={[
+                styles.filtroTextoChip,
+                filtroCriticidade === 'Crítico' &&
+                styles.filtroTextoChipAtivo,
+              ]}
+            >
+              Crítico
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.filtroChip,
+              filtroCriticidade === 'Alto' &&
+              styles.filtroChipAtivo,
+            ]}
+            onPress={function () {
+              setFiltroCriticidade('Alto');
+            }}
+          >
+            <Text
+              style={[
+                styles.filtroTextoChip,
+                filtroCriticidade === 'Alto' &&
+                styles.filtroTextoChipAtivo,
+              ]}
+            >
+              Alto
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.filtroChip,
+              filtroCriticidade === 'Médio' &&
+              styles.filtroChipAtivo,
+            ]}
+            onPress={function () {
+              setFiltroCriticidade('Médio');
+            }}
+          >
+            <Text
+              style={[
+                styles.filtroTextoChip,
+                filtroCriticidade === 'Médio' &&
+                styles.filtroTextoChipAtivo,
+              ]}
+            >
+              Médio
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.filtroChip,
+              filtroCriticidade === 'Baixo' &&
+              styles.filtroChipAtivo,
+            ]}
+            onPress={function () {
+              setFiltroCriticidade('Baixo');
+            }}
+          >
+            <Text
+              style={[
+                styles.filtroTextoChip,
+                filtroCriticidade === 'Baixo' &&
+                styles.filtroTextoChipAtivo,
+              ]}
+            >
+              Baixo
+            </Text>
+          </TouchableOpacity>
+
+        </View>
+
+      )}
 
       <ScrollView
         contentContainerStyle={{
@@ -481,4 +617,38 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
   },
+
+  filtrosContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 14,
+    marginBottom: 16,
+  },
+
+  filtroChip: {
+    backgroundColor: '#FFF',
+    borderWidth: 1,
+    borderColor: '#DDD',
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    marginRight: 8,
+    marginBottom: 8,
+  },
+
+  filtroChipAtivo: {
+    backgroundColor: AZUL,
+    borderColor: AZUL,
+  },
+
+  filtroTextoChip: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: '#111827',
+  },
+
+  filtroTextoChipAtivo: {
+    color: '#FFF',
+  },
+
 });

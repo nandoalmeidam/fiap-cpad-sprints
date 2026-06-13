@@ -29,32 +29,68 @@ export default function RankingScreen({
   // Termo utilizado para filtrar os registros
   // pelo KM informado pelo usuário.
   const [buscaKm, setBuscaKm] = useState('');
+
+  // Controla a exibição das opções de filtro.
+  const [mostrarFiltros, setMostrarFiltros] = useState(false);
+
+  // Criticidade selecionada para filtragem.
+  const [filtroCriticidade, setFiltroCriticidade] = useState('Todos');
+    
   // Controla a exibição do menu de ações rápidas.
   const [mostrarMenu, setMostrarMenu] = useState(false);
 
   // Agrupa as ocorrências críticas para compor
-  // as primeiras posições do ranking.
-  const ocorrenciasCriticas =
-    ocorrencias.filter(function (item) {
-      return item.criticidade === 'Crítico' && item.km.includes(buscaKm);
+  // selecionados pelo usuário.
+  const ocorrenciasCriticas = ocorrencias.filter(function (item) {
+
+      return (
+        item.criticidade === 'Crítico' &&
+        item.km.includes(buscaKm) &&
+        (
+          filtroCriticidade === 'Todos' ||
+          filtroCriticidade === 'Crítico'
+        )
+      );
+
     });
 
-  const ocorrenciasAltas =
-    ocorrencias.filter(function (item) {
+  const ocorrenciasAltas = ocorrencias.filter(function (item) {
 
-      return item.criticidade === 'Alto' && item.km.includes(buscaKm);
+      return (
+        item.criticidade === 'Alto' &&
+        item.km.includes(buscaKm) &&
+        (
+          filtroCriticidade === 'Todos' ||
+          filtroCriticidade === 'Alto'
+        )
+      );
+
     });
 
-  const ocorrenciasMedias =
-    ocorrencias.filter(function (item) {
+  const ocorrenciasMedias = ocorrencias.filter(function (item) {
 
-      return item.criticidade === 'Médio' && item.km.includes(buscaKm);
+      return (
+        item.criticidade === 'Médio' &&
+        item.km.includes(buscaKm) &&
+        (
+          filtroCriticidade === 'Todos' ||
+          filtroCriticidade === 'Médio'
+        )
+      );
+
     });
 
-  const ocorrenciasBaixas =
-    ocorrencias.filter(function (item) {
+  const ocorrenciasBaixas = ocorrencias.filter(function (item) {
 
-      return item.criticidade === 'Baixo' && item.km.includes(buscaKm);
+      return (
+        item.criticidade === 'Baixo' &&
+        item.km.includes(buscaKm) &&
+        (
+          filtroCriticidade === 'Todos' ||
+          filtroCriticidade === 'Baixo'
+        )
+      );
+
     });
 
   return (
@@ -106,7 +142,10 @@ export default function RankingScreen({
           <TouchableOpacity
             style={styles.menuItem}
             onPress={function () {
+
+              setMostrarMenu(false);
               setTela('perfil');
+
             }}
           >
             <Text style={styles.menuTexto}>
@@ -114,21 +153,58 @@ export default function RankingScreen({
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity
+            style={styles.menuItem}
+
+            onPress={function () {
+
+              setMostrarMenu(false);
+
+              Alert.alert(
+                'Configurações',
+                'As configurações do aplicativo podem ser acessadas na tela de Perfil.'
+              );
+
+              setTela('perfil');
+
+            }}
+          >
             <Text style={styles.menuTexto}>
               Configurações
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuTexto}>
-              Ajuda
-            </Text>
-          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.menuItem}
 
-          <TouchableOpacity style={styles.menuItem}>
+            onPress={function () {
+
+              setMostrarMenu(false);
+
+              Alert.alert(
+                'Sobre o EcoTrack',
+
+                '🌱 EcoTrack\n\n' +
+
+                'Aplicativo desenvolvido para a Sprint 2 da disciplina Cross-Platform Application Development (FIAP).\n\n' +
+
+                'A solução auxilia equipes de campo e supervisores no registro, acompanhamento e priorização de ocorrências relacionadas à conservação da faixa de domínio das rodovias.\n\n' +
+
+                '👨‍💻 Equipe de Desenvolvimento\n\n' +
+
+                '• Bruno Anselmo Da Silva - RM 566521\n' +
+                '• Fernando de Almeida Godoi Martines - RM 564820\n' +
+                '• Gabriel Ber Soares Tarone - RM 563520\n' +
+                '• Guilherme de Freitas Salgado - RM 562494\n' +
+                '• Vinicius Ribeiro Dias - RM 566468\n\n' +
+
+                '🎓 FIAP • 2026'
+              );
+
+            }}
+          >
             <Text style={styles.menuTexto}>
-              Sobre
+              Sobre o App
             </Text>
           </TouchableOpacity>
 
@@ -166,12 +242,139 @@ export default function RankingScreen({
             onChangeText={setBuscaKm}
           />
 
-          <Image
-            source={require('../assets/icons/iconeFiltroRankingDeKmsCriticosPreto.png')}
-            style={{ width: 24, height: 24 }}
-          />
+          <TouchableOpacity
+
+            // Exibe ou oculta os filtros
+            // disponíveis para o ranking.
+            onPress={function () {
+              setMostrarFiltros(
+                !mostrarFiltros
+              );
+            }}
+          >
+
+            <Image
+              source={require('../assets/icons/iconeFiltroRankingDeKmsCriticosPreto.png')}
+              style={{ width: 24, height: 24 }}
+            />
+
+          </TouchableOpacity>
 
         </View>
+
+        {/* Filtros por criticidade */}
+        {mostrarFiltros && (
+
+          <View style={styles.filtrosContainer}>
+
+            <TouchableOpacity
+              style={[
+                styles.filtroChip,
+                filtroCriticidade === 'Todos' &&
+                styles.filtroChipAtivo,
+              ]}
+              onPress={function () {
+                setFiltroCriticidade('Todos');
+              }}
+            >
+              <Text
+                style={[
+                  styles.filtroTexto,
+                  filtroCriticidade === 'Todos' &&
+                  styles.filtroTextoAtivo,
+                ]}
+              >
+                Todos
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.filtroChip,
+                filtroCriticidade === 'Crítico' &&
+                styles.filtroChipAtivo,
+              ]}
+              onPress={function () {
+                setFiltroCriticidade('Crítico');
+              }}
+            >
+              <Text
+                style={[
+                  styles.filtroTexto,
+                  filtroCriticidade === 'Crítico' &&
+                  styles.filtroTextoAtivo,
+                ]}
+              >
+                Crítico
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.filtroChip,
+                filtroCriticidade === 'Alto' &&
+                styles.filtroChipAtivo,
+              ]}
+              onPress={function () {
+                setFiltroCriticidade('Alto');
+              }}
+            >
+              <Text
+                style={[
+                  styles.filtroTexto,
+                  filtroCriticidade === 'Alto' &&
+                  styles.filtroTextoAtivo,
+                ]}
+              >
+                Alto
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.filtroChip,
+                filtroCriticidade === 'Médio' &&
+                styles.filtroChipAtivo,
+              ]}
+              onPress={function () {
+                setFiltroCriticidade('Médio');
+              }}
+            >
+              <Text
+                style={[
+                  styles.filtroTexto,
+                  filtroCriticidade === 'Médio' &&
+                  styles.filtroTextoAtivo,
+                ]}
+              >
+                Médio
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.filtroChip,
+                filtroCriticidade === 'Baixo' &&
+                styles.filtroChipAtivo,
+              ]}
+              onPress={function () {
+                setFiltroCriticidade('Baixo');
+              }}
+            >
+              <Text
+                style={[
+                  styles.filtroTexto,
+                  filtroCriticidade === 'Baixo' &&
+                  styles.filtroTextoAtivo,
+                ]}
+              >
+                Baixo
+              </Text>
+            </TouchableOpacity>
+
+          </View>
+
+        )}
 
         {/* Relação de ocorrências ordenadas por criticidade */}
         <View style={styles.tabela}>
@@ -621,4 +824,38 @@ const styles = StyleSheet.create({
     color: '#E53935',
     fontWeight: 'bold',
   },
+
+  filtrosContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 20,
+    marginBottom: 16,
+  },
+
+  filtroChip: {
+    backgroundColor: '#FFF',
+    borderWidth: 1,
+    borderColor: '#DDD',
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    marginRight: 8,
+    marginBottom: 8,
+  },
+
+  filtroChipAtivo: {
+    backgroundColor: AZUL,
+    borderColor: AZUL,
+  },
+
+  filtroTexto: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: '#111827',
+  },
+
+  filtroTextoAtivo: {
+  color: '#FFF',
+},
+
 });
