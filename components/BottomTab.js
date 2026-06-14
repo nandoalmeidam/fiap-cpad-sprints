@@ -145,7 +145,7 @@ const AZUL = '#5F21F3';
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 50,
     left: 12,
     right: 12,
     flexDirection: 'row',
