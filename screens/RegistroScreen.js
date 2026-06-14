@@ -142,6 +142,37 @@ export default function RegistroScreen({
     }
   }
 
+  /* Permite tirar foto para utilização como evidência da ocorrência */
+  async function tirarFoto() {
+
+    const permissao =
+      await ImagePicker.requestCameraPermissionsAsync();
+
+    if (!permissao.granted) {
+
+      alert(
+        'Permissão para acessar a câmera negada.'
+      );
+
+      return;
+    }
+
+    const resultado =
+      await ImagePicker.launchCameraAsync({
+
+        allowsEditing: false,
+
+        quality: 1,
+      });
+
+    if (!resultado.canceled) {
+
+      setFoto(
+        resultado.assets[0].uri
+      );
+    }
+  }
+
   // Remove um tipo personalizado criado pelo usuário.
   function excluirTipo(nomeTipo) {
 
@@ -653,7 +684,7 @@ export default function RegistroScreen({
             <TouchableOpacity
               style={styles.fotoBox}
 
-              onPress={escolherFoto}
+              onPress={tirarFoto}
             >
 
               {foto ? (

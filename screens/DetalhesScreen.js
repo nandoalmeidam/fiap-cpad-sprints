@@ -163,6 +163,23 @@ export default function DetalhesScreen({
             Descrição
           </Text>
 
+          {ocorrencia.foto && (
+
+            <>
+              <Text style={styles.descricaoTitulo}>
+                Foto da Ocorrência
+              </Text>
+
+              <Image
+                source={{
+                  uri: ocorrencia.foto,
+                }}
+                style={styles.fotoOcorrencia}
+              />
+            </>
+
+          )}
+
           {/* Modo de edição da descrição da ocorrência */}
           {modoEdicao ? (
 
@@ -506,5 +523,12 @@ const styles = StyleSheet.create({
   botaoExcluirTexto: {
     color: '#FFF',
     fontWeight: 'bold',
+  },
+
+  fotoOcorrencia: {
+    width: '100%',
+    height: 220,
+    borderRadius: 16,
+    marginBottom: 20,
   },
 });
