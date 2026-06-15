@@ -191,7 +191,7 @@ Funcionalidades:
 </p>
 
 <p align="center">
-  <img src="./assets/screenshots/06_DetalhesOcorrenciaAtualizado.png" width="220">
+  <img src="./assets/screenshots/06_DetalhesOcorrenciaNovaAtualizado.png" width="220">
   <img src="./assets/screenshots/06_DetalhesOcorrenciaTipos.png" width="220">
 </p>
 
