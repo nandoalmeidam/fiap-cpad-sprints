@@ -286,13 +286,35 @@ ecotrack/
 
 # ▶️ Como Executar
 
+Clone o repositório:
+
+```bash
+git clone https://github.com/nandoalmeidam/fiap-cpad-sprint2.git
+```
+
+Acesse a pasta do projeto:
+
+```bash
+cd ecotrack
+```
+
+Instale as dependências:
+
 ```bash
 npm install
 ```
 
+Inicie o aplicativo:
+
 ```bash
 npx expo start
 ```
+
+Após a inicialização, utilize:
+
+- Tecla **a** para abrir no Android Emulator;
+- Aplicativo **Expo Go** para executar em dispositivo físico;
+- Ou escaneie o QR Code gerado pelo Expo.
 
 ---
 
