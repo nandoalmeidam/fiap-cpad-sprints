@@ -150,10 +150,7 @@ export function OcorrenciasProvider({
             };
           }
 
-          return {
-            ...item,
-            status: 'Aberta',
-          };
+          return item;
         }
 
         return item;

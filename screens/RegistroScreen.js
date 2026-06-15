@@ -279,7 +279,7 @@ export default function RegistroScreen({
 
       longitude,
 
-      status: 'Em andamento',
+      status: 'Aberta',
 
       // Define a pontuação utilizada no ranking
       // com base no nível de criticidade.
