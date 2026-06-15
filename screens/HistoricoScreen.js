@@ -26,6 +26,8 @@ export default function HistoricoScreen({
   setTela,
   setOcorrenciaSelecionada,
 }) {
+  const [busca, setBusca] = useState('');
+
   const { ocorrencias, } = useOcorrencias();
 
   // Status atualmente selecionado para filtragem
@@ -50,11 +52,16 @@ export default function HistoricoScreen({
         filtroCriticidade === 'Todas' ||
         item.criticidade === filtroCriticidade;
 
+      const buscaValida =
+        busca === '' ||
+        item.km.toLowerCase().includes(busca.toLowerCase()) ||
+        item.tipo.toLowerCase().includes(busca.toLowerCase());
+
       return (
         statusValido &&
-        criticidadeValida
+        criticidadeValida &&
+        buscaValida
       );
-
     });
 
   return (
@@ -175,6 +182,8 @@ export default function HistoricoScreen({
             placeholder="Buscar por KM ou tipo"
             placeholderTextColor="#999"
             style={styles.input}
+            value={busca}
+            onChangeText={setBusca}
           />
 
         </View>
