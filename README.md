@@ -264,7 +264,7 @@ Funcionalidades:
 # 📂 Estrutura do Projeto
 
 ```text
-ecotrack/
+fiap-cpad-sprint2/
 │
 ├── assets/
 │   ├── icons/
@@ -295,7 +295,7 @@ git clone https://github.com/nandoalmeidam/fiap-cpad-sprint2.git
 Acesse a pasta do projeto:
 
 ```bash
-cd ecotrack
+cd fiap-cpad-sprint2
 ```
 
 Instale as dependências:
