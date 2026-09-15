@@ -9,7 +9,11 @@ import {
 export default function BottomTab({
   setTela,
   tela,
+  perfil,
 }) {
+
+  const isSupervisor = perfil === 'Supervisor';
+
   return (
     // Barra de navegação inferior utilizada
     // em todas as telas principais do EcoTrack.
@@ -41,31 +45,33 @@ export default function BottomTab({
         </Text>
       </TouchableOpacity>
 
-      {/* Exibe o ranking de trechos com maior criticidade */}
-      <TouchableOpacity
-        style={styles.item}
-        onPress={function () {
-          setTela('ranking');
-        }}
-      >
-        <Image
-          source={
-            tela === 'ranking'
-              ? require('../assets/icons/iconeRankingRoxo.png')
-              : require('../assets/icons/iconeRankingPreto.png')
-          }
-          style={styles.icone}
-        />
-
-        <Text
-          style={[
-            styles.texto,
-            tela === 'ranking' && styles.textoAtivo,
-          ]}
+      {/* Exibe o ranking apenas para o perfil Supervisor */}
+      {isSupervisor && (
+        <TouchableOpacity
+          style={styles.item}
+          onPress={function () {
+            setTela('ranking');
+          }}
         >
-          Ranking
-        </Text>
-      </TouchableOpacity>
+          <Image
+            source={
+              tela === 'ranking'
+                ? require('../assets/icons/iconeRankingRoxo.png')
+                : require('../assets/icons/iconeRankingPreto.png')
+            }
+            style={styles.icone}
+          />
+
+          <Text
+            style={[
+              styles.texto,
+              tela === 'ranking' && styles.textoAtivo,
+            ]}
+          >
+            Ranking
+          </Text>
+        </TouchableOpacity>
+      )}
       
       {/* Botão principal para registro de novas ocorrências em campo */}
       <TouchableOpacity
@@ -106,7 +112,7 @@ export default function BottomTab({
             tela === 'historico' && styles.textoAtivo,
           ]}
         >
-          Histórico
+          {isSupervisor ? 'Histórico' : 'Minhas'}
         </Text>
       </TouchableOpacity>
 

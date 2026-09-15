@@ -23,11 +23,6 @@ export function OcorrenciasProvider({
   children,
 }) {
 
-  const [
-    ocorrenciaSelecionada,
-    setOcorrenciaSelecionada,
-  ] = useState(null);
-
   // Dados iniciais utilizados quando não existem
   // ocorrências persistidas no dispositivo.
   const [ocorrencias, setOcorrencias] =
@@ -126,6 +121,10 @@ export function OcorrenciasProvider({
   // Fluxo de status:
   // Aberta -> Em andamento -> Concluída
   function atualizarStatus(id) {
+
+    const dataAlteracao =
+      Date.now();
+
     const novaLista =
       ocorrencias.map(function (item) {
 
@@ -136,6 +135,8 @@ export function OcorrenciasProvider({
             return {
               ...item,
               status: 'Em andamento',
+              alteradoPor: 'Supervisão',
+              dataAlteracao,
             };
           }
 
@@ -147,6 +148,8 @@ export function OcorrenciasProvider({
             return {
               ...item,
               status: 'Concluída',
+              alteradoPor: 'Supervisão',
+              dataAlteracao,
             };
           }
 
@@ -182,6 +185,34 @@ export function OcorrenciasProvider({
     setOcorrencias(novaLista);
   }
 
+  /*
+  * Atualiza os dados editáveis de uma ocorrência.
+  *
+  * Permite alterar tipo, criticidade, descrição
+  * e os dados visuais relacionados à criticidade.
+  */
+  function editarOcorrencia(
+    id,
+    dadosAtualizados
+  ) {
+
+    const novaLista =
+      ocorrencias.map(function (item) {
+
+        if (item.id === id) {
+
+          return {
+            ...item,
+            ...dadosAtualizados,
+          };
+        }
+
+        return item;
+      });
+
+    setOcorrencias(novaLista);
+  }
+
   function removerOcorrencia(id) {
     const novaLista =
       ocorrencias.filter(function (item) {
@@ -199,9 +230,8 @@ export function OcorrenciasProvider({
         adicionarOcorrencia,
         atualizarStatus,
         editarDescricao,
+        editarOcorrencia,
         removerOcorrencia,
-        ocorrenciaSelecionada,
-        setOcorrenciaSelecionada,
       }}
     >
       {children}

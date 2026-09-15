@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 
 import BottomTab from '../components/BottomTab';
+import { useConfiguracoes, } from '../context/ConfiguracoesContext';
+import { useUsuario } from '../context/UsuarioContext';
 
 const AZUL = '#5F21F3';
 
@@ -24,11 +26,19 @@ const AZUL = '#5F21F3';
 export default function PerfilScreen({
   setTela,
   sairDoApp,
+  perfil,
 }) {
 
-  // Armazena a data e hora da última
-  // sincronização realizada pelo usuário
-  const [ultimaSincronizacao, setUltimaSincronizacao] = useState('20/05/2026 - 14:45');
+  const {
+    gpsAtivo,
+    setGpsAtivo,
+    notificacoesAtivas,
+    setNotificacoesAtivas,
+  } = useConfiguracoes();
+
+  const {
+    alterarSenha,
+  } = useUsuario();
 
   // Controla a exibição das configurações do aplicativo
   const [mostrarConfiguracoes, setMostrarConfiguracoes] = useState(false);
@@ -36,7 +46,9 @@ export default function PerfilScreen({
   // Controla a exibição da área de alteração de senha.
   const [mostrarAlterarSenha, setMostrarAlterarSenha] = useState(false);
 
-  // Campos simulados para atualização de senha.
+  // Campos utilizados para atualização de senha.
+  const [senhaAtual, setSenhaAtual] = useState('');
+
   const [novaSenha, setNovaSenha] = useState('');
 
   const [confirmarSenha, setConfirmarSenha] = useState('');
@@ -47,18 +59,17 @@ export default function PerfilScreen({
   // Controla a visualização da confirmação.
   const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState(false);
 
-  // Preferências simuladas
-  const [notificacoesAtivas, setNotificacoesAtivas] = useState(true);
-
-  const [gpsAtivo, setGpsAtivo] = useState(true);
-
   // Controla a exibição do modo de edição do perfil
   const [modoEdicao, setModoEdicao] = useState(false);
 
   // Informações editáveis do colaborador
   const [nome, setNome] = useState('Carlos Mendes');
 
-  const [cargo, setCargo] = useState('Supervisor de Conservação');
+  const [cargo, setCargo] = useState(
+    perfil === 'Supervisor'
+      ? 'Supervisor de Conservação'
+      : 'Agente de Campo'
+  );
 
   const [equipe, setEquipe] = useState('Frente 03');
 
@@ -110,7 +121,11 @@ export default function PerfilScreen({
           <View style={styles.avatarContainer}>
 
             <Image
-              source={require('../assets/images/avatar.png')}
+              source={
+                perfil === 'Supervisor'
+                  ? require('../assets/images/avatar.png')
+                  : require('../assets/images/avatarCampo.png')
+              }
               style={styles.avatar}
             />
 
@@ -128,11 +143,9 @@ export default function PerfilScreen({
                   onChangeText={setNome}
                 />
 
-                <TextInput
-                  style={styles.inputPerfil}
-                  value={cargo}
-                  onChangeText={setCargo}
-                />
+                <Text style={styles.cargo}>
+                  {cargo}
+                </Text>
 
               </>
 
@@ -268,7 +281,11 @@ export default function PerfilScreen({
                 onPress={function () {
 
                   setNome('Carlos Mendes');
-                  setCargo('Supervisor de Conservação');
+                  setCargo(
+                    perfil === 'Supervisor'
+                      ? 'Supervisor de Conservação'
+                      : 'Agente de Campo'
+                  );
                   setEquipe('Frente 03');
                   setTrecho('SP-270');
                   setRegiao('Sorocaba - SP');
@@ -351,6 +368,22 @@ export default function PerfilScreen({
             <View style={styles.senhaContainer}>
 
               <Text style={styles.senhaLabel}>
+                Senha atual
+              </Text>
+
+              <View style={styles.inputSenhaContainer}>
+
+                <TextInput
+                  style={styles.inputSenhaComIcone}
+                  secureTextEntry={true}
+                  value={senhaAtual}
+                  onChangeText={setSenhaAtual}
+                  placeholder="Digite a senha atual"
+                />
+
+              </View>
+
+              <Text style={styles.senhaLabel}>
                 Nova senha
               </Text>
 
@@ -426,12 +459,26 @@ export default function PerfilScreen({
                 onPress={function () {
 
                   if (
+                    !senhaAtual ||
+                    !novaSenha ||
+                    !confirmarSenha
+                  ) {
+
+                    Alert.alert(
+                      'Campos obrigatórios',
+                      'Preencha todos os campos para alterar a senha.'
+                    );
+
+                    return;
+                  }
+
+                  if (
                     novaSenha.length < 6
                   ) {
 
                     Alert.alert(
                       'Senha inválida',
-                      'A senha deve possuir pelo menos 6 caracteres.'
+                      'A nova senha deve possuir pelo menos 6 caracteres.'
                     );
 
                     return;
@@ -449,11 +496,29 @@ export default function PerfilScreen({
                     return;
                   }
 
+                  const resultado =
+                    alterarSenha(
+                      perfil,
+                      senhaAtual,
+                      novaSenha
+                    );
+
+                  if (!resultado.sucesso) {
+
+                    Alert.alert(
+                      'Não foi possível alterar a senha',
+                      resultado.mensagem
+                    );
+
+                    return;
+                  }
+
                   Alert.alert(
                     'Senha alterada',
-                    'Senha atualizada com sucesso.'
+                    resultado.mensagem
                   );
 
+                  setSenhaAtual('');
                   setNovaSenha('');
                   setConfirmarSenha('');
                   setMostrarAlterarSenha(false);
@@ -470,55 +535,6 @@ export default function PerfilScreen({
             </View>
 
           )}
-
-          <TouchableOpacity
-            style={styles.menuLinha}
-              // Atualiza a data da última sincronização
-              // e exibe confirmação para o usuário.
-              onPress={function () {
-                const agora =
-                  new Date();
-
-                const dataHora =
-                  agora.toLocaleString('pt-BR');
-
-                setUltimaSincronizacao(
-                  dataHora
-                );
-
-                Alert.alert(
-                  'Sincronização',
-                  'Dados sincronizados com sucesso.'
-                );
-              }}
-          >
-
-            <View style={styles.menuEsquerda}>
-
-              <Image
-                source={require('../assets/icons/iconeSincronizarPerfilPreto.png')}
-                style={styles.iconePerfil}
-              />
-
-              <View>
-
-                <Text style={styles.menuTexto}>
-                  Sincronizar dados
-                </Text>
-
-                <Text style={styles.subtexto}>
-                  Última sincronização: {ultimaSincronizacao}
-                </Text>
-
-              </View>
-
-            </View>
-
-            <Text style={styles.menuSeta}>
-              ›
-            </Text>
-
-          </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.menuLinha}
@@ -562,7 +578,9 @@ export default function PerfilScreen({
                   </Text>
 
                   <Text style={styles.configDescricao}>
-                    Alertas sobre ocorrências e atualizações.
+                    {perfil === 'Supervisor'
+                      ? 'Alertas sobre ocorrências e atualizações.'
+                      : 'Alertas sobre suas ocorrências e atualizações.'}
                   </Text>
                 </View>
 
@@ -636,29 +654,11 @@ export default function PerfilScreen({
           <TouchableOpacity
             style={styles.menuLinhaSemBorda}
 
-            // Exibe informações institucionais
-            // sobre o desenvolvimento do aplicativo.
+            // Abre as informações institucionais
+            // do aplicativo.
             onPress={function () {
 
-              Alert.alert(
-                'Sobre o EcoTrack',
-
-                '🌱 EcoTrack\n\n' +
-
-                'Aplicativo desenvolvido para a Sprint 2 da disciplina Cross-Platform Application Development (FIAP).\n\n' +
-
-                'A solução auxilia equipes de campo e supervisores no registro, acompanhamento e priorização de ocorrências relacionadas à conservação da faixa de domínio das rodovias.\n\n' +
-
-                '👨‍💻 Equipe de Desenvolvimento\n\n' +
-
-                '• Bruno Anselmo Da Silva - RM 566521\n' +
-                '• Fernando de Almeida Godoi Martines - RM 564820\n' +
-                '• Gabriel Ber Soares Tarone - RM 563520\n' +
-                '• Guilherme de Freitas Salgado - RM 562494\n' +
-                '• Vinicius Ribeiro Dias - RM 566468\n\n' +
-
-                '🎓 FIAP • 2026'
-              );
+              setTela('sobre');
 
             }}
           >
@@ -696,7 +696,11 @@ export default function PerfilScreen({
 
       </ScrollView>
 
-      <BottomTab setTela={setTela} tela="perfil" />
+      <BottomTab
+        setTela={setTela}
+        tela="perfil"
+        perfil={perfil}
+      />
 
     </View>
   );
@@ -768,7 +772,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     color: '#111827',
-     marginLeft: 20,
   },
 
   cargo: {
@@ -919,72 +922,42 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
 
-  botaoSalvar: {
-    backgroundColor: AZUL,
-    marginHorizontal: 24,
+  botoesEdicao: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 12,
     marginBottom: 16,
-    paddingVertical: 14,
+  },
+
+  botaoCancelar: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#DADADA',
     borderRadius: 12,
+    paddingVertical: 14,
     alignItems: 'center',
+    marginRight: 8,
+    backgroundColor: '#FFF',
+  },
+
+  botaoCancelarTexto: {
+    color: '#555',
+    fontWeight: 'bold',
+  },
+
+  botaoSalvar: {
+    flex: 1,
+    backgroundColor: AZUL,
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginLeft: 8,
   },
 
   botaoSalvarTexto: {
     color: '#FFF',
     fontSize: 16,
     fontWeight: 'bold',
-  },
-
-  configLinha: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#EEEEEE',
-    paddingBottom: 14,
-    marginBottom: 14,
-  },
-
-  configLinhaSemBorda: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-
-  configLabel: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: '#111827',
-  },
-
-  configDescricao: {
-    fontSize: 12,
-    color: '#777',
-    marginTop: 4,
-    width: 180,
-  },
-
-  configBotao: {
-    borderWidth: 1,
-    borderColor: '#DADADA',
-    borderRadius: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    backgroundColor: '#FFF',
-  },
-
-  configBotaoAtivo: {
-    backgroundColor: AZUL,
-    borderColor: AZUL,
-  },
-
-  configBotaoTexto: {
-    color: '#777',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-
-  configBotaoTextoAtivo: {
-    color: '#FFF',
   },
 
   configInterna: {
@@ -1088,38 +1061,6 @@ const styles = StyleSheet.create({
   botaoSalvarSenhaTexto: {
     color: '#FFF',
     fontWeight: 'bold',
-  },
-
-  botoesEdicao: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 12,
-    marginBottom: 16,
-  },
-
-  botaoCancelar: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#DADADA',
-    borderRadius: 12,
-    paddingVertical: 14,
-    alignItems: 'center',
-    marginRight: 8,
-    backgroundColor: '#FFF',
-  },
-
-  botaoCancelarTexto: {
-    color: '#555',
-    fontWeight: 'bold',
-  },
-
-  botaoSalvar: {
-    flex: 1,
-    backgroundColor: AZUL,
-    borderRadius: 12,
-    paddingVertical: 14,
-    alignItems: 'center',
-    marginLeft: 8,
   },
 
 });

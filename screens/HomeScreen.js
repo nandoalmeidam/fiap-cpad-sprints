@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
-  Alert,
 } from 'react-native';
 import { useState } from 'react';
 
@@ -14,6 +13,18 @@ import BottomTab from '../components/BottomTab';
 import {
   useOcorrencias,
 } from '../context/OcorrenciasContext';
+
+import {
+  useNotificacoes,
+} from '../context/NotificacoesContext';
+
+import {
+  useUsuario,
+} from '../context/UsuarioContext';
+
+import {
+  useConfiguracoes,
+} from '../context/ConfiguracoesContext';
 
 const AZUL = '#5F21F3';
 
@@ -28,9 +39,31 @@ const AZUL = '#5F21F3';
 export default function HomeScreen({
   setTela,
   sairDoApp,
+  perfil,
+  setFiltroHistoricoInicial,
 }) {
 
   const { ocorrencias, } = useOcorrencias();
+
+  const {
+    quantidadeNaoLidas,
+  } = useNotificacoes();
+
+  const {
+    notificacoesAtivas,
+  } = useConfiguracoes();
+
+  const {
+    usuarioLogado,
+  } = useUsuario();
+
+  const isSupervisor = perfil === 'Supervisor';
+
+  const ocorrenciasDoPerfil = isSupervisor
+  ? ocorrencias
+  : ocorrencias.filter(function (item) {
+      return item.perfilRegistro === 'Campo';
+    });
 
   // Ocorrências organizadas por nível de criticidade
   // para composição do ranking operacional.
@@ -67,19 +100,21 @@ export default function HomeScreen({
     });
 
   // Indicadores exibidos nos cards de resumo da Home.
-  const abertas = ocorrencias.filter(
+  // Supervisor visualiza os dados gerais.
+  // Campo visualiza apenas suas próprias ocorrências.
+  const abertas = ocorrenciasDoPerfil.filter(
     function (item) {
       return item.status === 'Aberta';
     }
   ).length;
 
-  const andamento = ocorrencias.filter(
+  const andamento = ocorrenciasDoPerfil.filter(
     function (item) {
       return item.status === 'Em andamento';
     }
   ).length;
 
-  const criticas = ocorrencias.filter(
+  const criticas = ocorrenciasDoPerfil.filter(
     function (item) {
 
       return (
@@ -95,7 +130,7 @@ export default function HomeScreen({
     }
   ).length;
 
-  const concluidas = ocorrencias.filter(
+  const concluidas = ocorrenciasDoPerfil.filter(
     function (item) {
       return item.status === 'Concluída';
     }
@@ -132,100 +167,70 @@ export default function HomeScreen({
           </Text>
         </View>
 
-        <TouchableOpacity
-          onPress={function () {
+        {isSupervisor ? (
 
-            // Exibe feedback quando não existem
-            // notificações pendentes para o usuário.
-            Alert.alert(
-              'Notificações',
-              'Você não possui notificações no momento.'
-            );
+          <TouchableOpacity
+            style={styles.sinoContainer}
 
-          }}
-        >
+            onPress={function () {
+              setTela('notificacoes');
+            }}
+          >
 
-          <Image
-            source={require('../assets/icons/iconeSinoBranco.png')}
-            style={{ width: 22, height: 22 }}
-          />
+            <Image
+              source={require('../assets/icons/iconeSinoBranco.png')}
+              style={{ width: 22, height: 22 }}
+            />
 
-        </TouchableOpacity>
+            {notificacoesAtivas &&
+              quantidadeNaoLidas > 0 && (
+
+                <View style={styles.notificacaoBadge}>
+
+                  <Text style={styles.notificacaoBadgeTexto}>
+                    {quantidadeNaoLidas > 9
+                      ? '9+'
+                      : quantidadeNaoLidas}
+                  </Text>
+
+                </View>
+            )}
+
+          </TouchableOpacity>
+
+        ) : (
+
+          <View style={{ width: 22 }} />
+
+        )}
 
       </View>
 
       {mostrarMenu && (
+
         <View style={styles.menuBox}>
 
+          {/* Acessa informações da conta,
+              preferências e configurações. */}
           <TouchableOpacity
             style={styles.menuItem}
             onPress={function () {
 
               setMostrarMenu(false);
+
               setTela('perfil');
 
             }}
           >
+
             <Text style={styles.menuTexto}>
               Minha Conta
             </Text>
+
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.menuItem}
 
-            onPress={function () {
-
-              setMostrarMenu(false);
-
-              Alert.alert(
-                'Configurações',
-                'As configurações do aplicativo podem ser acessadas na tela de Perfil.'
-              );
-
-              setTela('perfil');
-
-            }}
-          >
-            <Text style={styles.menuTexto}>
-              Configurações
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.menuItem}
-
-            onPress={function () {
-
-              setMostrarMenu(false);
-
-              Alert.alert(
-                'Sobre o EcoTrack',
-
-                '🌱 EcoTrack\n\n' +
-
-                'Aplicativo desenvolvido para a Sprint 2 da disciplina Cross-Platform Application Development (FIAP).\n\n' +
-
-                'A solução auxilia equipes de campo e supervisores no registro, acompanhamento e priorização de ocorrências relacionadas à conservação da faixa de domínio das rodovias.\n\n' +
-
-                '👨‍💻 Equipe de Desenvolvimento\n\n' +
-
-                '• Bruno Anselmo Da Silva - RM 566521\n' +
-                '• Fernando de Almeida Godoi Martines - RM 564820\n' +
-                '• Gabriel Ber Soares Tarone - RM 563520\n' +
-                '• Guilherme de Freitas Salgado - RM 562494\n' +
-                '• Vinicius Ribeiro Dias - RM 566468\n\n' +
-
-                '🎓 FIAP • 2026'
-              );
-
-            }}
-          >
-            <Text style={styles.menuTexto}>
-              Sobre o App
-            </Text>
-          </TouchableOpacity>
-
+          {/* Encerra a sessão atual. */}
           <TouchableOpacity
             style={[
               styles.menuItem,
@@ -233,18 +238,23 @@ export default function HomeScreen({
                 borderBottomWidth: 0,
               },
             ]}
-
             onPress={function () {
+
               setMostrarMenu(false);
+
               sairDoApp();
+
             }}
           >
+
             <Text style={styles.menuTextoLogout}>
               Logout
             </Text>
+
           </TouchableOpacity>
 
         </View>
+
       )}
 
       <ScrollView
@@ -256,18 +266,34 @@ export default function HomeScreen({
         <View style={styles.topo}>
 
           <Text style={styles.nome}>
-            Olá, Carlos!
+            Olá, {usuarioLogado?.nome || 'Usuário'}!
           </Text>
 
           <Text style={styles.cargo}>
-            Supervisor de Conservação
+            {isSupervisor
+              ? 'Supervisor de Conservação'
+              : 'Agente de Campo'}
           </Text>
 
         </View>
 
         <View style={styles.cardsResumo}>
 
-          <View style={styles.cardResumo}>
+          {/* Abre o Histórico mostrando
+              somente ocorrências abertas. */}
+          <TouchableOpacity
+            style={styles.cardResumo}
+            activeOpacity={0.7}
+            onPress={function () {
+
+              setFiltroHistoricoInicial({
+                tipo: 'status',
+                valor: 'Aberta',
+              });
+
+              setTela('historico');
+            }}
+          >
 
             <Text style={styles.numeroResumo}>
               {abertas}
@@ -281,9 +307,24 @@ export default function HomeScreen({
               Abertas
             </Text>
 
-          </View>
+          </TouchableOpacity>
 
-          <View style={styles.cardResumo}>
+
+          {/* Abre o Histórico mostrando
+              ocorrências em andamento. */}
+          <TouchableOpacity
+            style={styles.cardResumo}
+            activeOpacity={0.7}
+            onPress={function () {
+
+              setFiltroHistoricoInicial({
+                tipo: 'status',
+                valor: 'Em andamento',
+              });
+
+              setTela('historico');
+            }}
+          >
 
             <Text style={styles.numeroResumo}>
               {andamento}
@@ -297,9 +338,24 @@ export default function HomeScreen({
               Andamento
             </Text>
 
-          </View>
+          </TouchableOpacity>
 
-          <View style={styles.cardResumo}>
+
+          {/* Abre o Histórico mostrando
+              somente ocorrências críticas. */}
+          <TouchableOpacity
+            style={styles.cardResumo}
+            activeOpacity={0.7}
+            onPress={function () {
+
+              setFiltroHistoricoInicial({
+                tipo: 'criticidade',
+                valor: 'Crítico',
+              });
+
+              setTela('historico');
+            }}
+          >
 
             <Text
               style={[
@@ -316,9 +372,24 @@ export default function HomeScreen({
               Críticas
             </Text>
 
-          </View>
+          </TouchableOpacity>
 
-          <View style={styles.cardResumo}>
+
+          {/* Abre o Histórico mostrando
+              somente ocorrências concluídas. */}
+          <TouchableOpacity
+            style={styles.cardResumo}
+            activeOpacity={0.7}
+            onPress={function () {
+
+              setFiltroHistoricoInicial({
+                tipo: 'status',
+                valor: 'Concluída',
+              });
+
+              setTela('historico');
+            }}
+          >
 
             <Text style={styles.numeroResumo}>
               {concluidas}
@@ -328,263 +399,266 @@ export default function HomeScreen({
               Concluídas
             </Text>
 
-          </View>
+          </TouchableOpacity>
 
         </View>
 
         {/* Ranking resumido dos trechos com maior criticidade */}
-        <View style={styles.cardRanking}>
+        {isSupervisor && (
 
-          <View style={styles.rankingHeader}>
+          <View style={styles.cardRanking}>
 
-            <Text style={styles.rankingTitulo}>
-              Ranking Rápido dos KMs Críticos
-            </Text>
+            <View style={styles.rankingHeader}>
 
-            <TouchableOpacity
-              // Direciona para a visualização completa
-              // do ranking de ocorrências.
-              onPress={function () {
-                setTela('ranking');
-              }}
-            >
-
-              <Text style={styles.verTodos}>
-                Ver todos
+              <Text style={styles.rankingTitulo}>
+                Ranking Rápido dos KMs Críticos
               </Text>
 
-            </TouchableOpacity>
+              <TouchableOpacity
+                // Direciona para a visualização completa
+                // do ranking de ocorrências.
+                onPress={function () {
+                  setTela('ranking');
+                }}
+              >
+
+                <Text style={styles.verTodos}>
+                  Ver todos
+                </Text>
+
+              </TouchableOpacity>
+
+            </View>
+
+            {ocorrenciasCriticas.map(
+              function (item, index) {
+
+                return (
+
+                  <View
+                    key={item.id}
+                    style={styles.linhaRanking}
+                  >
+
+                    <View style={styles.kmContainer}>
+
+                      <Text style={styles.posicao}>
+                        {index + 1}
+                      </Text>
+
+                      <Text style={styles.kmTexto}>
+                        KM {item.km}
+                      </Text>
+
+                    </View>
+
+                    <View
+                      style={
+                        styles.statusContainer
+                      }
+                    >
+
+                      <View
+                        style={[
+                          styles.bolinha,
+
+                          {
+                            backgroundColor:
+                              item.cor,
+                          },
+                        ]}
+                      />
+
+                      <Text style={styles.statusTexto}>
+                        {item.criticidade}
+                      </Text>
+
+                    </View>
+
+                    <Text style={styles.pontuacao}>
+                      {item.pontuacao}
+                    </Text>
+
+                  </View>
+                );
+              }
+            )}
+
+            {ocorrenciasAltas.map(
+              function (item, index) {
+
+                return (
+
+                  <View
+                    key={item.id}
+                    style={styles.linhaRanking}
+                  >
+
+                    <View style={styles.kmContainer}>
+
+                      <Text style={styles.posicao}>
+                        {ocorrenciasCriticas.length + index + 1}
+                      </Text>
+
+                      <Text style={styles.kmTexto}>
+                        KM {item.km}
+                      </Text>
+
+                    </View>
+
+                    <View
+                      style={
+                        styles.statusContainer
+                      }
+                    >
+
+                      <View
+                        style={[
+                          styles.bolinha,
+
+                          {
+                            backgroundColor:
+                              item.cor,
+                          },
+                        ]}
+                      />
+
+                      <Text style={styles.statusTexto}>
+                        {item.criticidade}
+                      </Text>
+
+                    </View>
+
+                    <Text style={styles.pontuacao}>
+                      {item.pontuacao}
+                    </Text>
+
+                  </View>
+                );
+              }
+            )}
+
+            {ocorrenciasMedias.map(
+              function (item, index) {
+
+                return (
+
+                  <View
+                    key={item.id}
+                    style={styles.linhaRanking}
+                  >
+
+                    <View style={styles.kmContainer}>
+
+                      <Text style={styles.posicao}>
+                        {
+                          ocorrenciasCriticas.length +
+                          ocorrenciasAltas.length +
+                          index +
+                          1
+                        }
+                      </Text>
+
+                      <Text style={styles.kmTexto}>
+                        KM {item.km}
+                      </Text>
+
+                    </View>
+
+                    <View
+                      style={
+                        styles.statusContainer
+                      }
+                    >
+
+                      <View
+                        style={[
+                          styles.bolinha,
+
+                          {
+                            backgroundColor:
+                              item.cor,
+                          },
+                        ]}
+                      />
+
+                      <Text style={styles.statusTexto}>
+                        {item.criticidade}
+                      </Text>
+
+                    </View>
+
+                    <Text style={styles.pontuacao}>
+                      {item.pontuacao}
+                    </Text>
+
+                  </View>
+                );
+              }
+            )}
+
+            {ocorrenciasBaixas.map(
+              function (item, index) {
+
+                return (
+
+                  <View
+                    key={item.id}
+                    style={styles.linhaRanking}
+                  >
+
+                    <View style={styles.kmContainer}>
+
+                      <Text style={styles.posicao}>
+                        {
+                          ocorrenciasCriticas.length +
+                          ocorrenciasAltas.length +
+                          ocorrenciasMedias.length +
+                          index +
+                          1
+                        }
+                      </Text>
+
+                      <Text style={styles.kmTexto}>
+                        KM {item.km}
+                      </Text>
+
+                    </View>
+
+                    <View
+                      style={
+                        styles.statusContainer
+                      }
+                    >
+
+                      <View
+                        style={[
+                          styles.bolinha,
+
+                          {
+                            backgroundColor:
+                              item.cor,
+                          },
+                        ]}
+                      />
+
+                      <Text style={styles.statusTexto}>
+                        {item.criticidade}
+                      </Text>
+
+                    </View>
+
+                    <Text style={styles.pontuacao}>
+                      {item.pontuacao}
+                    </Text>
+
+                  </View>
+                );
+              }
+            )}
 
           </View>
-
-          {ocorrenciasCriticas.map(
-            function (item, index) {
-
-              return (
-
-                <View
-                  key={item.id}
-                  style={styles.linhaRanking}
-                >
-
-                  <View style={styles.kmContainer}>
-
-                    <Text style={styles.posicao}>
-                      {index + 1}
-                    </Text>
-
-                    <Text style={styles.kmTexto}>
-                      KM {item.km}
-                    </Text>
-
-                  </View>
-
-                  <View
-                    style={
-                      styles.statusContainer
-                    }
-                  >
-
-                    <View
-                      style={[
-                        styles.bolinha,
-
-                        {
-                          backgroundColor:
-                            item.cor,
-                        },
-                      ]}
-                    />
-
-                    <Text style={styles.statusTexto}>
-                      {item.criticidade}
-                    </Text>
-
-                  </View>
-
-                  <Text style={styles.pontuacao}>
-                    {item.pontuacao}
-                  </Text>
-
-                </View>
-              );
-            }
-          )}
-
-          {ocorrenciasAltas.map(
-            function (item, index) {
-
-              return (
-
-                <View
-                  key={item.id}
-                  style={styles.linhaRanking}
-                >
-
-                  <View style={styles.kmContainer}>
-
-                    <Text style={styles.posicao}>
-                      {ocorrenciasCriticas.length + index + 1}
-                    </Text>
-
-                    <Text style={styles.kmTexto}>
-                      KM {item.km}
-                    </Text>
-
-                  </View>
-
-                  <View
-                    style={
-                      styles.statusContainer
-                    }
-                  >
-
-                    <View
-                      style={[
-                        styles.bolinha,
-
-                        {
-                          backgroundColor:
-                            item.cor,
-                        },
-                      ]}
-                    />
-
-                    <Text style={styles.statusTexto}>
-                      {item.criticidade}
-                    </Text>
-
-                  </View>
-
-                  <Text style={styles.pontuacao}>
-                    {item.pontuacao}
-                  </Text>
-
-                </View>
-              );
-            }
-          )}
-
-          {ocorrenciasMedias.map(
-            function (item, index) {
-
-              return (
-
-                <View
-                  key={item.id}
-                  style={styles.linhaRanking}
-                >
-
-                  <View style={styles.kmContainer}>
-
-                    <Text style={styles.posicao}>
-                      {
-                        ocorrenciasCriticas.length +
-                        ocorrenciasAltas.length +
-                        index +
-                        1
-                      }
-                    </Text>
-
-                    <Text style={styles.kmTexto}>
-                      KM {item.km}
-                    </Text>
-
-                  </View>
-
-                  <View
-                    style={
-                      styles.statusContainer
-                    }
-                  >
-
-                    <View
-                      style={[
-                        styles.bolinha,
-
-                        {
-                          backgroundColor:
-                            item.cor,
-                        },
-                      ]}
-                    />
-
-                    <Text style={styles.statusTexto}>
-                      {item.criticidade}
-                    </Text>
-
-                  </View>
-
-                  <Text style={styles.pontuacao}>
-                    {item.pontuacao}
-                  </Text>
-
-                </View>
-              );
-            }
-          )}
-
-          {ocorrenciasBaixas.map(
-            function (item, index) {
-
-              return (
-
-                <View
-                  key={item.id}
-                  style={styles.linhaRanking}
-                >
-
-                  <View style={styles.kmContainer}>
-
-                    <Text style={styles.posicao}>
-                      {
-                        ocorrenciasCriticas.length +
-                        ocorrenciasAltas.length +
-                        ocorrenciasMedias.length +
-                        index +
-                        1
-                      }
-                    </Text>
-
-                    <Text style={styles.kmTexto}>
-                      KM {item.km}
-                    </Text>
-
-                  </View>
-
-                  <View
-                    style={
-                      styles.statusContainer
-                    }
-                  >
-
-                    <View
-                      style={[
-                        styles.bolinha,
-
-                        {
-                          backgroundColor:
-                            item.cor,
-                        },
-                      ]}
-                    />
-
-                    <Text style={styles.statusTexto}>
-                      {item.criticidade}
-                    </Text>
-
-                  </View>
-
-                  <Text style={styles.pontuacao}>
-                    {item.pontuacao}
-                  </Text>
-
-                </View>
-              );
-            }
-          )}
-
-        </View>
+        )}
 
         {/* Acessos rápidos para registro e consulta de ocorrências */}
         <View style={styles.acoesContainer}>
@@ -622,6 +696,9 @@ export default function HomeScreen({
             // Navega para a consulta dos registros
             // já cadastrados no sistema.
             onPress={function () {
+
+              setFiltroHistoricoInicial(null);
+
               setTela('historico');
             }}
           >
@@ -634,11 +711,11 @@ export default function HomeScreen({
             <View style={styles.textoCard}>
 
               <Text style={styles.acaoTitulo}>
-                Histórico
+                {isSupervisor ? 'Histórico' : 'Minhas Ocorrências'}
               </Text>
 
               <Text style={styles.acaoSubtitulo}>
-                Ver registros
+                {isSupervisor ? 'Ver registros' : 'Acompanhar registros'}
               </Text>
 
             </View>
@@ -647,14 +724,15 @@ export default function HomeScreen({
 
         </View>
 
-      </ScrollView>
+            </ScrollView>
 
-      <BottomTab
-        setTela={setTela}
-        tela="home"
-      />
+              <BottomTab
+                setTela={setTela}
+                tela="home"
+                perfil={perfil}
+              />
 
-    </View>
+            </View>
   );
 }
 
@@ -893,6 +971,33 @@ const styles = StyleSheet.create({
   menuTextoLogout: {
     fontSize: 15,
     color: '#E53935',
+    fontWeight: 'bold',
+  },
+
+  sinoContainer: {
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+
+  notificacaoBadge: {
+    position: 'absolute',
+    top: -5,
+    right: -7,
+    minWidth: 17,
+    height: 17,
+    borderRadius: 9,
+    backgroundColor: '#E53935',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+  },
+
+  notificacaoBadgeTexto: {
+    color: '#FFFFFF',
+    fontSize: 10,
     fontWeight: 'bold',
   },
 

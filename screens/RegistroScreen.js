@@ -24,6 +24,14 @@ import {
   useOcorrencias,
 } from '../context/OcorrenciasContext';
 
+import {
+  useNotificacoes,
+} from '../context/NotificacoesContext';
+
+import {
+  useConfiguracoes,
+} from '../context/ConfiguracoesContext';
+
 const AZUL = '#5F21F3';
 
 /*
@@ -38,11 +46,20 @@ const AZUL = '#5F21F3';
 export default function RegistroScreen({
   setTela,
   setOcorrenciaSelecionada,
+  perfil,
 }) {
 
   // Função responsável por adicionar novas
   // ocorrências ao contexto global da aplicação.
   const { adicionarOcorrencia, } = useOcorrencias();
+
+  const {
+    adicionarNotificacao,
+  } = useNotificacoes();
+
+  const {
+    gpsAtivo,
+  } = useConfiguracoes();
 
   const [km, setKm] = useState('');
 
@@ -199,13 +216,23 @@ export default function RegistroScreen({
   }
 
   /*
- * Captura a localização atual do dispositivo
- * para complementar os dados do registro.
- *
- * Recurso nativo utilizado para auxiliar
- * a identificação do trecho da rodovia.
- */
+  * Captura a localização atual do dispositivo
+  * para complementar os dados do registro.
+  *
+  * A captura respeita a preferência de GPS
+  * definida nas configurações do aplicativo.
+  */
   async function capturarLocalizacao() {
+
+    if (!gpsAtivo) {
+
+      alert(
+        'A localização GPS está desativada nas configurações do aplicativo.'
+      );
+
+      return;
+    }
+
     const permissao =
       await Location.requestForegroundPermissionsAsync();
 
@@ -218,20 +245,38 @@ export default function RegistroScreen({
       return;
     }
 
-    const localizacaoAtual =
-      await Location.getCurrentPositionAsync({});
+    try {
 
-    setLatitude(
-      String(localizacaoAtual.coords.latitude)
-    );
+      const localizacaoAtual =
+        await Location.getCurrentPositionAsync({});
 
-    setLongitude(
-      String(localizacaoAtual.coords.longitude)
-    );
+      setLatitude(
+        String(
+          localizacaoAtual.coords.latitude
+        )
+      );
 
-    alert(
-      'Localização capturada com sucesso.'
-    );
+      setLongitude(
+        String(
+          localizacaoAtual.coords.longitude
+        )
+      );
+
+      alert(
+        'Localização capturada com sucesso.'
+      );
+
+    } catch (erro) {
+
+      alert(
+        'Não foi possível obter a localização atual.'
+      );
+
+      console.log(
+        'Erro ao capturar localização:',
+        erro
+      );
+    }
   }
 
   /*
@@ -256,14 +301,22 @@ export default function RegistroScreen({
       return;
     }
 
+    // Gera uma referência única para identificação
+    // e registro da data da ocorrência.
+    const dataRegistro = Date.now();
+
     // Estrutura da ocorrência armazenada
     // e compartilhada entre as telas do aplicativo.
     const novaOcorrencia = {
 
-      id: Date.now(),
+      id: dataRegistro,
 
       protocolo:
-        'ECO-' + Date.now(),
+        'ECO-' + dataRegistro,
+
+        // Identifica o perfil responsável
+        // pela criação da ocorrência.
+        perfilRegistro: perfil,
 
       km,
 
@@ -307,6 +360,43 @@ export default function RegistroScreen({
     adicionarOcorrencia(
       novaOcorrencia
     );
+
+    /*
+    * Registros realizados pelo Agente de Campo
+    * geram uma notificação para o Supervisor.
+    */
+    if (perfil === 'Campo') {
+
+      adicionarNotificacao({
+
+        id:
+          'NOT-' + dataRegistro,
+
+        ocorrenciaId:
+          novaOcorrencia.id,
+
+        destinatario:
+          'Supervisor',
+
+        titulo:
+          'Nova ocorrência cadastrada',
+
+        mensagem:
+          'KM ' +
+          novaOcorrencia.km +
+          ' • ' +
+          novaOcorrencia.tipo,
+
+        criticidade:
+          novaOcorrencia.criticidade,
+
+        data:
+          dataRegistro,
+
+        lida:
+          false,
+      });
+    }
 
     setOcorrenciaSelecionada(
       novaOcorrencia
@@ -802,7 +892,11 @@ export default function RegistroScreen({
 
       </KeyboardAvoidingView>
 
-      <BottomTab setTela={setTela} tela="registro" />
+      <BottomTab
+        setTela={setTela}
+        tela="registro"
+        perfil={perfil}
+      />
 
     </View>
   );

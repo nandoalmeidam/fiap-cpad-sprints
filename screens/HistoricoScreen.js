@@ -25,24 +25,56 @@ import {
 export default function HistoricoScreen({
   setTela,
   setOcorrenciaSelecionada,
+  perfil,
+  filtroHistoricoInicial,
+  setFiltroHistoricoInicial,
 }) {
-  const [busca, setBusca] = useState('');
 
-  const { ocorrencias, } = useOcorrencias();
+  const [busca, setBusca] =
+    useState('');
 
-  // Status atualmente selecionado para filtragem
-  // das ocorrências exibidas na lista.
-  const [filtro, setFiltro] = useState('Todas');
+  const { ocorrencias, } =
+    useOcorrencias();
 
-  // Controla a exibição dos filtros complementares.
-  const [mostrarFiltros, setMostrarFiltros] = useState(false);
+  // Define o filtro de status inicial.
+  // Quando o Histórico é aberto pela Home,
+  // utiliza o card selecionado pelo usuário.
+  const [filtro, setFiltro] = useState(
+    filtroHistoricoInicial?.tipo === 'status'
+      ? filtroHistoricoInicial.valor
+      : 'Todas'
+  );
 
-  // Criticidade selecionada para filtragem.
-  const [filtroCriticidade, setFiltroCriticidade] = useState('Todas');
+  // Abre automaticamente os filtros
+  // complementares quando o acesso ocorreu
+  // pelo card de criticidade da Home.
+  const [
+    mostrarFiltros,
+    setMostrarFiltros,
+  ] = useState(
+    filtroHistoricoInicial?.tipo ===
+      'criticidade'
+  );
 
-  // Aplica os filtros de status e criticidade
-  // selecionados pelo usuário.
+  // Define a criticidade inicial quando
+  // o Histórico é aberto pelo card Críticas.
+  const [
+    filtroCriticidade,
+    setFiltroCriticidade,
+  ] = useState(
+    filtroHistoricoInicial?.tipo ===
+      'criticidade'
+      ? filtroHistoricoInicial.valor
+      : 'Todas'
+  );
+
+  // Aplica os filtros de perfil, status,
+  // criticidade e busca das ocorrências.
   const ocorrenciasFiltradas = ocorrencias.filter(function (item) {
+
+      const perfilValido =
+        perfil === 'Supervisor' ||
+        item.perfilRegistro === 'Campo';
 
       const statusValido =
         filtro === 'Todas' ||
@@ -58,6 +90,7 @@ export default function HistoricoScreen({
         item.tipo.toLowerCase().includes(busca.toLowerCase());
 
       return (
+        perfilValido &&
         statusValido &&
         criticidadeValida &&
         buscaValida
@@ -71,6 +104,9 @@ export default function HistoricoScreen({
 
         <TouchableOpacity
           onPress={function () {
+
+            setFiltroHistoricoInicial(null);
+
             setTela('home');
           }}
         >
@@ -81,7 +117,9 @@ export default function HistoricoScreen({
         </TouchableOpacity>
 
         <Text style={styles.headerTitulo}>
-          Histórico de Ocorrências
+          {perfil === 'Supervisor'
+            ? 'Histórico de Ocorrências'
+            : 'Minhas Ocorrências'}
         </Text>
 
         <View style={{ width: 22 }} />
@@ -382,7 +420,9 @@ export default function HistoricoScreen({
                   >
 
                     <Text style={styles.data}>
-                      20/05/2026
+                      {new Date(
+                        item.dataRegistro || item.id
+                      ).toLocaleDateString('pt-BR')}
                     </Text>
 
                     <View
@@ -422,7 +462,11 @@ export default function HistoricoScreen({
 
       </ScrollView>
 
-      <BottomTab setTela={setTela} tela="historico" />
+      <BottomTab
+        setTela={setTela}
+        tela="historico"
+        perfil={perfil}
+      />
 
     </View>
   );

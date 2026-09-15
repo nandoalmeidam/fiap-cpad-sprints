@@ -8,7 +8,10 @@ import {
   Image,
   Alert,
 } from 'react-native';
-import { useState, } from 'react';
+import React, {
+  useState,
+  useEffect,
+} from 'react';
 
 import BottomTab from '../components/BottomTab';
 import { useOcorrencias, } from '../context/OcorrenciasContext';
@@ -25,8 +28,10 @@ import { useOcorrencias, } from '../context/OcorrenciasContext';
 export default function RankingScreen({
   setTela,
   sairDoApp,
+  perfil,
 }) {
   const { ocorrencias } =  useOcorrencias();
+
   // Termo utilizado para filtrar os registros
   // pelo KM informado pelo usuário.
   const [buscaKm, setBuscaKm] = useState('');
@@ -39,6 +44,26 @@ export default function RankingScreen({
     
   // Controla a exibição do menu de ações rápidas.
   const [mostrarMenu, setMostrarMenu] = useState(false);
+
+  // Impede que o perfil Campo acesse
+  // diretamente a tela de Ranking.
+  useEffect(function () {
+
+    if (perfil !== 'Supervisor') {
+
+      setTela('home');
+
+    }
+
+  }, [perfil, setTela]);
+
+  // Enquanto o redirecionamento é realizado,
+  // evita a exibição do conteúdo do Ranking.
+  if (perfil !== 'Supervisor') {
+
+    return null;
+
+  }
 
   // Agrupa as ocorrências críticas para compor
   // selecionados pelo usuário.
@@ -187,7 +212,7 @@ export default function RankingScreen({
 
                 '🌱 EcoTrack\n\n' +
 
-                'Aplicativo desenvolvido para a Sprint 2 da disciplina Cross-Platform Application Development (FIAP).\n\n' +
+                'Aplicativo desenvolvido para as Sprints da disciplina Cross-Platform Application Development (FIAP).\n\n' +
 
                 'A solução auxilia equipes de campo e supervisores no registro, acompanhamento e priorização de ocorrências relacionadas à conservação da faixa de domínio das rodovias.\n\n' +
 
@@ -641,7 +666,11 @@ export default function RankingScreen({
 
       </ScrollView>
 
-      <BottomTab setTela={setTela} tela="ranking" />
+      <BottomTab
+        setTela={setTela}
+        tela="ranking"
+        perfil={perfil}
+      />
 
     </View>
   );

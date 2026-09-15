@@ -20,6 +20,16 @@ import DetalhesScreen from './screens/DetalhesScreen';
 import ConfirmacaoScreen from './screens/ConfirmacaoScreen';
 import RankingScreen from './screens/RankingScreen';
 import PerfilScreen from './screens/PerfilScreen';
+import SobreScreen from './screens/SobreScreen';
+import {
+  NotificacoesProvider,
+} from './context/NotificacoesContext';
+import NotificacoesScreen from './screens/NotificacoesScreen';
+import { ConfiguracoesProvider, } from './context/ConfiguracoesContext';
+import {
+  UsuarioProvider,
+  useUsuario,
+} from './context/UsuarioContext';
 
 /*
  * Componente principal do EcoTrack.
@@ -29,18 +39,34 @@ import PerfilScreen from './screens/PerfilScreen';
  * da aplicação.
  */
 
-export default function App() {
+function AppConteudo() {
+
+  const {
+    autenticar,
+    carregouUsuarios,
+  } = useUsuario();
+
   const [usuario, setUsuario] = useState('');
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
   const [perfil, setPerfil] = useState('Supervisor');
+
   // Armazena a ocorrência selecionada para
   // visualização na tela de detalhes.
   const [ocorrenciaSelecionada, setOcorrenciaSelecionada] = useState(null);
+
   const [mostrarSenha, setMostrarSenha] = useState(false);
+
   // Controla a tela atualmente exibida
   // no fluxo principal da aplicação.
   const [tela, setTela] = useState('splash');
+
+  // Armazena um filtro enviado pela Home
+  // ao abrir o Histórico de Ocorrências.
+  const [
+    filtroHistoricoInicial,
+    setFiltroHistoricoInicial,
+  ] = useState(null);
 
   // Exibe a tela de abertura por alguns
   // segundos antes de iniciar o fluxo de login.
@@ -56,7 +82,15 @@ export default function App() {
  * ao sistema.
  */
   function validarLogin() {
-    if (usuario === '') {
+
+    if (!carregouUsuarios) {
+      setErro(
+        'Aguarde o carregamento dos dados.'
+      );
+      return;
+    }
+
+    if (usuario.trim() === '') {
       setErro('Digite seu e-mail.');
       return;
     }
@@ -72,7 +106,25 @@ export default function App() {
     }
 
     if (senha.length < 6) {
-      setErro('A senha precisa ter pelo menos 6 caracteres.');
+      setErro(
+        'A senha precisa ter pelo menos 6 caracteres.'
+      );
+      return;
+    }
+
+    const resultado =
+      autenticar(
+        usuario,
+        senha,
+        perfil
+      );
+
+    if (!resultado.sucesso) {
+
+      setErro(
+        'E-mail, senha ou perfil de acesso incorretos.'
+      );
+
       return;
     }
 
@@ -80,16 +132,32 @@ export default function App() {
     setTela('home');
   }
 
-  /*
+/*
  * Limpa os dados da sessão atual e retorna
  * o usuário para a tela de autenticação.
  */
-  function sairDoApp() {
-    setUsuario('');
-    setSenha('');
-    setErro('');
-    setTela('login');
-  }
+function sairDoApp() {
+
+  setUsuario('');
+
+  setSenha('');
+
+  setErro('');
+
+  // Retorna o seletor de perfil
+  // para o padrão da tela de login.
+  setPerfil('Supervisor');
+
+  // Remove qualquer ocorrência selecionada
+  // durante a sessão anterior.
+  setOcorrenciaSelecionada(null);
+
+  // Garante que o campo de senha volte
+  // ao modo protegido.
+  setMostrarSenha(false);
+
+  setTela('login');
+}
 
   /*
  * Navegação baseada no estado atual da aplicação.
@@ -98,244 +166,300 @@ export default function App() {
  */
   return (
     <OcorrenciasProvider>
-      <SafeAreaView style={{ flex: 1 }}>
+      <NotificacoesProvider>
+        <ConfiguracoesProvider>
+          <SafeAreaView style={{ flex: 1 }}>
 
-        {tela === 'splash' && (
-          <SplashScreen />
-        )}
+            {tela === 'splash' && (
+              <SplashScreen />
+            )}
 
-        {/* Tela de autenticação do usuário */}
-        {tela === 'login' && (
-          <SafeAreaView style={styles.container}>
-            <View style={styles.card}>
-              <Text style={styles.logo}>EcoTrack</Text>
+            {/* Tela de autenticação do usuário */}
+            {tela === 'login' && (
+              <SafeAreaView style={styles.container}>
+                <View style={styles.card}>
+                  <Text style={styles.logo}>EcoTrack</Text>
 
-              <Text style={styles.titulo}>
-                Bem-vindo de volta!
-              </Text>
+                  <Text style={styles.titulo}>
+                    Bem-vindo de volta!
+                  </Text>
 
-              <Text style={styles.subtitulo}>
-                Faça login para continuar
-              </Text>
+                  <Text style={styles.subtitulo}>
+                    Faça login para continuar
+                  </Text>
 
-              <Text style={styles.label}>Usuário</Text>
+                  <Text style={styles.label}>Usuário</Text>
 
-              <View style={styles.inputContainer}>
-                <Image
-                  source={require('./assets/icons/iconeUsuarioLoginCinza.png')}
-                  style={styles.icon}
-                />
+                  <View style={styles.inputContainer}>
+                    <Image
+                      source={require('./assets/icons/iconeUsuarioLoginCinza.png')}
+                      style={styles.icon}
+                    />
 
-                <TextInput
-                  placeholder="Digite seu usuário"
-                  placeholderTextColor="#999"
-                  style={styles.input}
-                  value={usuario}
-                  onChangeText={setUsuario}
-                />
-              </View>
+                    <TextInput
+                      placeholder="Digite seu usuário"
+                      placeholderTextColor="#999"
+                      style={styles.input}
+                      value={usuario}
+                      onChangeText={setUsuario}
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      keyboardType="email-address"
+                    />
+                  </View>
 
-              <Text style={styles.label}>Senha</Text>
-                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Senha</Text>
+                    <View style={styles.inputContainer}>
 
-                  <Image
-                    source={require('./assets/icons/iconeSenhaLoginCinza.png')}
-                    style={styles.icon}
-                  />
+                      <Image
+                        source={require('./assets/icons/iconeSenhaLoginCinza.png')}
+                        style={styles.icon}
+                      />
 
-                  <TextInput
-                    placeholder="Digite sua senha"
-                    placeholderTextColor="#999"
-                    secureTextEntry={!mostrarSenha}
-                    style={styles.input}
-                    value={senha}
-                    onChangeText={setSenha}
-                  />
+                      <TextInput
+                        placeholder="Digite sua senha"
+                        placeholderTextColor="#999"
+                        secureTextEntry={!mostrarSenha}
+                        style={styles.input}
+                        value={senha}
+                        onChangeText={setSenha}
+                      />
+
+                      <TouchableOpacity
+                        onPress={() => setMostrarSenha(!mostrarSenha)}
+                      >
+                        <Image
+                          source={
+                            mostrarSenha
+                              ? require('./assets/icons/iconeOlhoAbertoCinza.png')
+                              : require('./assets/icons/iconeOlhoFechadoCinza.png')
+                          }
+                          style={styles.eyeIcon}
+                        />
+                      </TouchableOpacity>
+
+                    </View>
+
+                    {erro !== '' && (
+                      <Text style={styles.erroTexto}>
+                        {erro}
+                      </Text>
+                    )}
 
                   <TouchableOpacity
-                    onPress={() => setMostrarSenha(!mostrarSenha)}
+                    onPress={function () {
+
+                      Alert.alert(
+                        'Recuperação de Senha',
+                        'Entre em contato com a supervisão responsável para redefinir sua senha.'
+                      );
+
+                    }}
                   >
-                    <Image
-                      source={
-                        mostrarSenha
-                          ? require('./assets/icons/iconeOlhoAbertoCinza.png')
-                          : require('./assets/icons/iconeOlhoFechadoCinza.png')
-                      }
-                      style={styles.eyeIcon}
-                    />
+                    <Text style={styles.esqueciSenha}>
+                      Esqueci minha senha
+                    </Text>
                   </TouchableOpacity>
 
+                  <Text style={styles.perfilTitulo}>
+                    Perfil de acesso
+                  </Text>
+
+                  <View style={styles.perfilBox}>
+                    <TouchableOpacity
+                      style={[
+                        styles.perfilOpcao,
+                        perfil === 'Supervisor' &&
+                          styles.perfilAtivo,
+                      ]}
+                      onPress={() =>
+                        setPerfil('Supervisor')
+                      }
+                    >
+                      <Image
+                        source={
+                          perfil === 'Supervisor'
+                            ? require('./assets/icons/iconeSupervisorLoginBranco.png')
+                            : require('./assets/icons/iconeSupervisorLoginCinza.png')
+                        }
+                        style={styles.iconePerfil}
+                      />
+                      <Text
+                        style={[
+                          styles.perfilTexto,
+                          perfil === 'Supervisor' &&
+                            styles.perfilTextoAtivo,
+                        ]}
+                      >
+                        Supervisor
+                      </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={[
+                        styles.perfilOpcao,
+                        perfil === 'Campo' &&
+                          styles.perfilAtivo,
+                      ]}
+                      onPress={() =>
+                        setPerfil('Campo')
+                      }
+                    >
+
+                      <Image
+                        source={
+                          perfil === 'Campo'
+                            ? require('./assets/icons/iconeCampoLoginCinza.png')
+                            : require('./assets/icons/iconeCampoLoginRoxo.png')
+                        }
+                        style={styles.iconePerfil}
+                      />
+                      <Text
+                        style={[
+                          styles.perfilTexto,
+                          perfil === 'Campo' &&
+                            styles.perfilTextoAtivo,
+                        ]}
+                      >
+                        Campo
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+
+                  <TouchableOpacity
+                    style={styles.botao}
+                    onPress={validarLogin}
+                  >
+                    <Text style={styles.botaoTexto}>
+                      Entrar
+                    </Text>
+                  </TouchableOpacity>
+
+                  <Text style={styles.versao}>
+                    Versão 3.0.11
+                  </Text>
                 </View>
+              </SafeAreaView>
+            )}
 
-                {erro !== '' && (
-                  <Text style={styles.erroTexto}>
-                    {erro}
-                  </Text>
-                )}
+            {/* Dashboard principal do sistema */}
+            {tela === 'home' && (
+              <HomeScreen
+                setTela={setTela}
+                sairDoApp={sairDoApp}
+                perfil={perfil}
+                setFiltroHistoricoInicial={
+                  setFiltroHistoricoInicial
+                }
+              />
+            )}
 
-              <TouchableOpacity
-                onPress={function () {
+            {/* Central de notificações do Supervisor */}
+            {tela === 'notificacoes' && (
+              <NotificacoesScreen
+                setTela={setTela}
+                perfil={perfil}
+                setOcorrenciaSelecionada={
+                  setOcorrenciaSelecionada
+                }
+              />
+            )}
 
-                  Alert.alert(
-                    'Recuperação de Senha',
-                    'Entre em contato com a supervisão responsável para redefinir sua senha.'
-                  );
+            {/* Cadastro de novas ocorrências */}
+            {tela === 'registro' && (
+              <RegistroScreen
+                setTela={setTela}
+                perfil={perfil}
 
-                }}
-              >
-                <Text style={styles.esqueciSenha}>
-                  Esqueci minha senha
-                </Text>
-              </TouchableOpacity>
+                setOcorrenciaSelecionada={
+                  setOcorrenciaSelecionada
+                }
+              />
+            )}
 
-              <Text style={styles.perfilTitulo}>
-                Perfil de acesso
-              </Text>
+            {/* Consulta dos registros cadastrados */}
+            {tela === 'historico' && (
+              <HistoricoScreen
+                setTela={setTela}
+                perfil={perfil}
+                setOcorrenciaSelecionada={
+                  setOcorrenciaSelecionada
+                }
+                filtroHistoricoInicial={
+                  filtroHistoricoInicial
+                }
+                setFiltroHistoricoInicial={
+                  setFiltroHistoricoInicial
+                }
+              />
+            )}
 
-              <View style={styles.perfilBox}>
-                <TouchableOpacity
-                  style={[
-                    styles.perfilOpcao,
-                    perfil === 'Supervisor' &&
-                      styles.perfilAtivo,
-                  ]}
-                  onPress={() =>
-                    setPerfil('Supervisor')
+            {/* Priorização das ocorrências por criticidade */}
+            {tela === 'ranking' && (
+              <RankingScreen
+                setTela={setTela}
+                sairDoApp={sairDoApp}
+                perfil={perfil}
+              />
+            )}
+
+            {/* Visualização completa de uma ocorrência */}
+            {tela === 'detalhes' &&
+              ocorrenciaSelecionada && (
+                <DetalhesScreen
+                  ocorrencia={ocorrenciaSelecionada}
+                  setOcorrenciaSelecionada={
+                    setOcorrenciaSelecionada
                   }
-                >
-                  <Image
-                    source={
-                      perfil === 'Supervisor'
-                        ? require('./assets/icons/iconeSupervisorLoginBranco.png')
-                        : require('./assets/icons/iconeSupervisorLoginCinza.png')
-                    }
-                    style={styles.iconePerfil}
-                  />
-                  <Text
-                    style={[
-                      styles.perfilTexto,
-                      perfil === 'Supervisor' &&
-                        styles.perfilTextoAtivo,
-                    ]}
-                  >
-                    Supervisor
-                  </Text>
-                </TouchableOpacity>
+                  setTela={setTela}
+                  perfil={perfil}
+                />
+            )}
 
-                <TouchableOpacity
-                  style={[
-                    styles.perfilOpcao,
-                    perfil === 'Campo' &&
-                      styles.perfilAtivo,
-                  ]}
-                  onPress={() =>
-                    setPerfil('Campo')
-                  }
-                >
+            {/* Informações e configurações do usuário */}
+            {tela === 'perfil' && (
+              <PerfilScreen
+                setTela={setTela}
+                sairDoApp={sairDoApp}
+                perfil={perfil}
+              />
+            )}
 
-                  <Image
-                    source={
-                      perfil === 'Campo'
-                        ? require('./assets/icons/iconeCampoLoginCinza.png')
-                        : require('./assets/icons/iconeCampoLoginRoxo.png')
-                    }
-                    style={styles.iconePerfil}
-                  />
-                  <Text
-                    style={[
-                      styles.perfilTexto,
-                      perfil === 'Campo' &&
-                        styles.perfilTextoAtivo,
-                    ]}
-                  >
-                    Campo
-                  </Text>
-                </TouchableOpacity>
-              </View>
+            {/* Informações institucionais do EcoTrack */}
+            {tela === 'sobre' && (
+              <SobreScreen
+                setTela={setTela}
+              />
+            )}
 
-              <TouchableOpacity
-                style={styles.botao}
-                onPress={validarLogin}
-              >
-                <Text style={styles.botaoTexto}>
-                  Entrar
-                </Text>
-              </TouchableOpacity>
+            {/* Feedback após o envio de uma ocorrência */}
+            {tela === 'confirmacao' && (
+              <ConfirmacaoScreen
+                setTela={setTela}
+                perfil={perfil}
 
-              <Text style={styles.versao}>
-                Versão 2.0.9
-              </Text>
-            </View>
+                ocorrenciaSelecionada={
+                  ocorrenciaSelecionada
+                }
+              />
+            )}
+
           </SafeAreaView>
-        )}
-
-        {/* Dashboard principal do sistema */}
-        {tela === 'home' && (
-          <HomeScreen
-            setTela={setTela}
-            sairDoApp={sairDoApp}
-          />
-        )}
-
-        {/* Cadastro de novas ocorrências */}
-        {tela === 'registro' && (
-          <RegistroScreen
-            setTela={setTela}
-
-            setOcorrenciaSelecionada={
-              setOcorrenciaSelecionada
-            }
-          />
-        )}
-
-        {/* Consulta dos registros cadastrados */}
-        {tela === 'historico' && (
-          <HistoricoScreen
-            setTela={setTela}
-            setOcorrenciaSelecionada={
-              setOcorrenciaSelecionada
-            }
-          />
-        )}
-
-        {/* Priorização das ocorrências por criticidade */}
-        {tela === 'ranking' && (
-          <RankingScreen
-            setTela={setTela}
-            sairDoApp={sairDoApp}
-          />
-        )}
-
-        {/* Visualização completa de uma ocorrência */}
-        {tela === 'detalhes' &&
-          ocorrenciaSelecionada && (
-            <DetalhesScreen
-              ocorrencia={ocorrenciaSelecionada}
-              setTela={setTela}
-            />
-        )}
-
-        {/* Informações e configurações do usuário */}
-        {tela === 'perfil' && (
-          <PerfilScreen
-            setTela={setTela}
-            sairDoApp={sairDoApp}
-          />
-        )}
-
-        {/* Feedback após o envio de uma ocorrência */}
-        {tela === 'confirmacao' && (
-          <ConfirmacaoScreen
-            setTela={setTela}
-
-            ocorrenciaSelecionada={
-              ocorrenciaSelecionada
-            }
-          />
-        )}
-
-      </SafeAreaView>
+        </ConfiguracoesProvider>
+      </NotificacoesProvider>
     </OcorrenciasProvider>
+  );
+}
+
+export default function App() {
+
+  return (
+
+    <UsuarioProvider>
+
+      <AppConteudo />
+
+    </UsuarioProvider>
   );
 }
 

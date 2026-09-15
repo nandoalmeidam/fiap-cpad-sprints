@@ -3,6 +3,7 @@ import {
   Text,
   StyleSheet,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 
 const AZUL = '#5F21F3';
@@ -37,18 +38,17 @@ export default function SplashScreen() {
         e Priorização da Faixa de Domínio
       </Text>
 
-      {/* Indicador visual de carregamento da aplicação */}
+      {/* Indicador animado de carregamento da aplicação */}
       <View style={styles.barraContainer}>
+
+        <ActivityIndicator
+          size="large"
+          color="#FFFFFF"
+        />
 
         <Text style={styles.carregando}>
           Carregando...
         </Text>
-
-        <View style={styles.barraFundo}>
-
-          <View style={styles.barra} />
-
-        </View>
 
       </View>
 
@@ -110,20 +110,6 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 16,
     marginBottom: 12,
-  },
-
-  barraFundo: {
-    width: 120,
-    height: 4,
-    backgroundColor: '#A78BFA',
-    borderRadius: 10,
-  },
-
-  barra: {
-    width: 70,
-    height: 4,
-    backgroundColor: '#FFF',
-    borderRadius: 10,
   },
 
   rodapeContainer: {

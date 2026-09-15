@@ -21,6 +21,7 @@ const AZUL = '#5F21F3';
 export default function ConfirmacaoScreen({
   setTela,
   ocorrenciaSelecionada,
+  perfil,
 }) {
   return (
     <View style={styles.container}>
@@ -70,7 +71,7 @@ export default function ConfirmacaoScreen({
           </Text>
 
           <Text style={styles.valor}>
-            Aguardando análise
+            {ocorrenciaSelecionada?.status}
           </Text>
 
         </View>
@@ -98,6 +99,8 @@ export default function ConfirmacaoScreen({
 
       <BottomTab
         setTela={setTela}
+        tela="confirmacao"
+        perfil={perfil}
       />
 
     </View>

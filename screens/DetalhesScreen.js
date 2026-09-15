@@ -30,14 +30,29 @@ const AZUL = '#5F21F3';
 
 export default function DetalhesScreen({
   ocorrencia,
+  setOcorrenciaSelecionada,
   setTela,
+  perfil,
 }) {
 
   const {
+    ocorrencias,
     atualizarStatus,
-    editarDescricao,
+    editarOcorrencia,
     removerOcorrencia,
   } = useOcorrencias();
+
+  const isSupervisor =
+    perfil === 'Supervisor';
+
+  const ocorrenciaAtual =
+    ocorrencias.find(function (item) {
+
+      return (
+        item.id ===
+        ocorrencia.id
+      );
+    }) || ocorrencia;
 
   // Controla a exibição do modo de edição
   // da descrição da ocorrência.
@@ -52,6 +67,89 @@ export default function DetalhesScreen({
       ocorrencia.descricao ||
       'Sem descrição'
     );
+
+    // Mantém os dados editáveis da ocorrência
+    // durante o modo de edição.
+    const [tipo, setTipo] =
+      useState(
+        ocorrencia.tipo
+      );
+
+    const [criticidade, setCriticidade] =
+      useState(
+        ocorrencia.criticidade
+      );
+
+    const [
+      mostrarTipos,
+      setMostrarTipos,
+    ] = useState(false);
+
+    const [
+      mostrarCriticidades,
+      setMostrarCriticidades,
+    ] = useState(false);
+
+    /*
+    * Tipos disponíveis durante a edição.
+    *
+    * O tipo atual é mantido na lista para
+    * preservar categorias personalizadas.
+    */
+    const tiposDisponiveis = Array.from(
+      new Set([
+        ocorrencia.tipo,
+        'Vegetação',
+        'Erosão',
+        'Cerca danificada',
+        'Drenagem',
+        'Sinalização',
+        'Invasão da faixa de domínio',
+      ])
+    );
+
+    /*
+    * Calcula os dados visuais utilizados
+    * pelo ranking conforme a criticidade.
+    */
+    function obterDadosCriticidade(
+      novaCriticidade
+    ) {
+
+      if (novaCriticidade === 'Crítico') {
+
+        return {
+          cor: '#C62828',
+          pontuacao: 10,
+        };
+      }
+
+      if (novaCriticidade === 'Alto') {
+
+        return {
+          cor: '#F77F00',
+          pontuacao: 8,
+        };
+      }
+
+      if (novaCriticidade === 'Médio') {
+
+        return {
+          cor: '#F4B400',
+          pontuacao: 5,
+        };
+      }
+
+      return {
+        cor: '#5FAF6D',
+        pontuacao: 2,
+      };
+    }
+
+    const dadosCriticidade =
+      obterDadosCriticidade(
+        criticidade
+      );
 
   return (
     <View style={styles.container}>
@@ -91,13 +189,15 @@ export default function DetalhesScreen({
               styles.badge,
               {
                 backgroundColor:
-                  ocorrencia.cor,
+                  dadosCriticidade.cor,
               },
             ]}
           >
+
             <Text style={styles.badgeTexto}>
-              {ocorrencia.criticidade.toUpperCase()}
+              {criticidade.toUpperCase()}
             </Text>
+
           </View>
 
           <Text style={styles.km}>
@@ -105,20 +205,97 @@ export default function DetalhesScreen({
           </Text>
 
           <Text style={styles.tipo}>
-            {ocorrencia.tipo}
+            {tipo}
           </Text>
 
           {/* Resumo das principais informações do registro */}
           <View style={styles.tabela}>
 
             <View style={styles.linha}>
+
               <Text style={styles.label}>
                 Tipo
               </Text>
 
-              <Text style={styles.valor}>
-                {ocorrencia.tipo}
-              </Text>
+              {modoEdicao ? (
+
+                <View style={styles.edicaoCampo}>
+
+                  <TouchableOpacity
+                    style={styles.selectEdicao}
+
+                    onPress={function () {
+
+                      setMostrarTipos(
+                        !mostrarTipos
+                      );
+
+                      setMostrarCriticidades(
+                        false
+                      );
+                    }}
+                  >
+
+                    <Text style={styles.selectEdicaoTexto}>
+                      {tipo}
+                    </Text>
+
+                    <Text style={styles.selectSeta}>
+                      ˅
+                    </Text>
+
+                  </TouchableOpacity>
+
+                  {mostrarTipos && (
+
+                    <View style={styles.opcoesEdicao}>
+
+                      {tiposDisponiveis.map(
+                        function (item) {
+
+                          return (
+
+                            <TouchableOpacity
+                              key={item}
+
+                              style={
+                                styles.opcaoEdicao
+                              }
+
+                              onPress={function () {
+
+                                setTipo(item);
+
+                                setMostrarTipos(false);
+                              }}
+                            >
+
+                              <Text
+                                style={
+                                  styles.opcaoEdicaoTexto
+                                }
+                              >
+                                {item}
+                              </Text>
+
+                            </TouchableOpacity>
+                          );
+                        }
+                      )}
+
+                    </View>
+                  )}
+
+                </View>
+
+              ) : (
+
+                <Text style={styles.valor}>
+                  {tipo}
+                </Text>
+
+              )}
+
             </View>
 
             <View style={styles.linha}>
@@ -127,34 +304,215 @@ export default function DetalhesScreen({
               </Text>
 
               <Text style={styles.valor}>
-                {ocorrencia.status}
+                {ocorrenciaAtual.status}
               </Text>
             </View>
 
+            {/* Identificação da origem do registro,
+                disponível somente para Supervisor */}
+            {isSupervisor && ocorrenciaAtual.perfilRegistro && (
+
+              <View style={styles.linha}>
+
+                <Text style={styles.label}>
+                  Registrado por
+                </Text>
+
+                <Text style={styles.valor}>
+                  {ocorrenciaAtual.perfilRegistro === 'Campo'
+                    ? 'Agente de Campo'
+                    : 'Supervisor'}
+                </Text>
+
+              </View>
+
+            )}
+
+            {/* Identificação da última alteração
+                realizada pela Supervisão */}
+            {isSupervisor &&
+              ocorrenciaAtual.alteradoPor && (
+
+              <>
+
+                <View style={styles.linha}>
+
+                  <Text style={styles.label}>
+                    Alterado por
+                  </Text>
+
+                  <Text style={styles.valor}>
+                    {ocorrenciaAtual.alteradoPor}
+                  </Text>
+
+                </View>
+
+                {ocorrenciaAtual.dataAlteracao && (
+
+                  <View style={styles.linha}>
+
+                    <Text style={styles.label}>
+                      Última alteração
+                    </Text>
+
+                    <Text style={styles.valor}>
+
+                      {new Date(
+                        ocorrenciaAtual.dataAlteracao
+                      ).toLocaleDateString(
+                        'pt-BR'
+                      )}
+
+                      {' às '}
+
+                      {new Date(
+                        ocorrenciaAtual.dataAlteracao
+                      ).toLocaleTimeString(
+                        'pt-BR',
+                        {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        }
+                      )}
+
+                    </Text>
+
+                  </View>
+
+                )}
+
+              </>
+
+            )}
+
             <View style={styles.linha}>
+
               <Text style={styles.label}>
                 Criticidade
               </Text>
 
-              <View
-                style={styles.criticidadeBox}
-              >
+              {modoEdicao ? (
+
+                <View style={styles.edicaoCampo}>
+
+                  <TouchableOpacity
+                    style={styles.selectEdicao}
+
+                    onPress={function () {
+
+                      setMostrarCriticidades(
+                        !mostrarCriticidades
+                      );
+
+                      setMostrarTipos(false);
+                    }}
+                  >
+
+                    <View
+                      style={
+                        styles.criticidadeSelect
+                      }
+                    >
+
+                      <View
+                        style={[
+                          styles.bolinha,
+                          {
+                            backgroundColor:
+                              dadosCriticidade.cor,
+                          },
+                        ]}
+                      />
+
+                      <Text
+                        style={
+                          styles.selectEdicaoTexto
+                        }
+                      >
+                        {criticidade}
+                      </Text>
+
+                    </View>
+
+                    <Text style={styles.selectSeta}>
+                      ˅
+                    </Text>
+
+                  </TouchableOpacity>
+
+                  {mostrarCriticidades && (
+
+                    <View style={styles.opcoesEdicao}>
+
+                      {[
+                        'Baixo',
+                        'Médio',
+                        'Alto',
+                        'Crítico',
+                      ].map(function (item) {
+
+                        return (
+
+                          <TouchableOpacity
+                            key={item}
+
+                            style={
+                              styles.opcaoEdicao
+                            }
+
+                            onPress={function () {
+
+                              setCriticidade(
+                                item
+                              );
+
+                              setMostrarCriticidades(
+                                false
+                              );
+                            }}
+                          >
+
+                            <Text
+                              style={
+                                styles.opcaoEdicaoTexto
+                              }
+                            >
+                              {item}
+                            </Text>
+
+                          </TouchableOpacity>
+                        );
+                      })}
+
+                    </View>
+                  )}
+
+                </View>
+
+              ) : (
 
                 <View
-                  style={[
-                    styles.bolinha,
-                    {
-                      backgroundColor:
-                        ocorrencia.cor,
-                    },
-                  ]}
-                />
+                  style={styles.criticidadeBox}
+                >
 
-                <Text style={styles.valor}>
-                  {ocorrencia.criticidade}
-                </Text>
+                  <View
+                    style={[
+                      styles.bolinha,
+                      {
+                        backgroundColor:
+                          dadosCriticidade.cor,
+                      },
+                    ]}
+                  />
 
-              </View>
+                  <Text style={styles.valor}>
+                    {criticidade}
+                  </Text>
+
+                </View>
+
+              )}
+
             </View>
 
           </View>
@@ -181,7 +539,7 @@ export default function DetalhesScreen({
           )}
 
           {/* Modo de edição da descrição da ocorrência */}
-          {modoEdicao ? (
+          {modoEdicao && isSupervisor ? (
 
             <>
 
@@ -203,17 +561,79 @@ export default function DetalhesScreen({
                 // Persiste a nova descrição no contexto global.
                 onPress={function () {
 
-                  editarDescricao(
+                  const novosDadosCriticidade =
+                    obterDadosCriticidade(
+                      criticidade
+                    );
+
+                  editarOcorrencia(
                     ocorrencia.id,
-                    descricao
+                    {
+
+                      tipo,
+
+                      criticidade,
+
+                      descricao,
+
+                      cor:
+                        novosDadosCriticidade.cor,
+
+                      pontuacao:
+                        novosDadosCriticidade.pontuacao,
+                      
+                      alteradoPor: 'Supervisão',
+
+                      dataAlteracao: Date.now(),
+                    }
                   );
+
+                  setMostrarTipos(false);
+
+                  setMostrarCriticidades(false);
 
                   setModoEdicao(false);
                 }}
               >
 
                 <Text style={styles.botaoSalvarTexto}>
-                  Salvar
+                  Salvar alterações
+                </Text>
+
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.botaoCancelarEdicao}
+
+                onPress={function () {
+
+                  setTipo(
+                    ocorrencia.tipo
+                  );
+
+                  setCriticidade(
+                    ocorrencia.criticidade
+                  );
+
+                  setDescricao(
+                    ocorrencia.descricao ||
+                    'Sem descrição'
+                  );
+
+                  setMostrarTipos(false);
+
+                  setMostrarCriticidades(false);
+
+                  setModoEdicao(false);
+                }}
+              >
+
+                <Text
+                  style={
+                    styles.botaoCancelarEdicaoTexto
+                  }
+                >
+                  Cancelar edição
                 </Text>
 
               </TouchableOpacity>
@@ -274,68 +694,109 @@ export default function DetalhesScreen({
 
         </View>
 
-        {/* Ações disponíveis para gerenciamento da ocorrência */}
-        <View style={styles.botoes}>
+        {/* Ações administrativas disponíveis somente para Supervisor */}
+        {isSupervisor && !modoEdicao && (
 
-          <TouchableOpacity
-            style={styles.botaoSecundario}
+          <View style={styles.botoes}>
 
-            onPress={function () {
+            <TouchableOpacity
+              style={styles.botaoSecundario}
 
-              setModoEdicao(true);
-            }}
-          >
-            <Text style={styles.botaoSecundarioTexto}>
-              Editar
-            </Text>
-          </TouchableOpacity>
+              onPress={function () {
 
-          <TouchableOpacity
-            style={styles.botaoPrincipal}
+                setModoEdicao(true);
 
-            onPress={function () {
+              }}
+            >
 
-              // Atualiza o ciclo de vida da ocorrência:
-              // Aberta -> Em andamento -> Concluída
-              Alert.alert(
+              <Text style={styles.botaoSecundarioTexto}>
+                Editar
+              </Text>
 
-                'Atualizar Status',
+            </TouchableOpacity>
 
-                'Deseja alterar o status da ocorrência?',
+            <TouchableOpacity
+              style={styles.botaoPrincipal}
 
-                [
-                  {
-                    text: 'Cancelar',
-                    style: 'cancel',
-                  },
+              onPress={function () {
 
-                  {
-                    text: 'Sim',
+                // Atualiza o ciclo de vida da ocorrência:
+                // Aberta -> Em andamento -> Concluída
+                Alert.alert(
 
-                    onPress: function () {
+                  'Atualizar Status',
 
-                      atualizarStatus(
-                        ocorrencia.id
-                      );
+                  'Deseja alterar o status da ocorrência?',
 
-                      setModoEdicao(false);
+                  [
+                    {
+                      text: 'Cancelar',
+                      style: 'cancel',
                     },
-                  },
-                ]
-              );
-            }}
-          >
-            <Text style={styles.botaoPrincipalTexto}>
-              Atualizar Status
-            </Text>
-          </TouchableOpacity>
 
-        </View>
+                    {
+                      text: 'Sim',
+
+                      onPress: function () {
+
+                        let novoStatus =
+                          ocorrenciaAtual.status;
+
+                        if (
+                          ocorrenciaAtual.status ===
+                          'Aberta'
+                        ) {
+
+                          novoStatus =
+                            'Em andamento';
+
+                        } else if (
+                          ocorrenciaAtual.status ===
+                          'Em andamento'
+                        ) {
+
+                          novoStatus =
+                            'Concluída';
+                        }
+
+                        const dataAlteracao =
+                          Date.now();
+
+                        atualizarStatus(
+                          ocorrenciaAtual.id
+                        );
+
+                        setOcorrenciaSelecionada({
+                          ...ocorrenciaAtual,
+                          status: novoStatus,
+                          alteradoPor: 'Supervisão',
+                          dataAlteracao,
+                        });
+
+                        setModoEdicao(false);
+                      },
+                    },
+                  ]
+                );
+              }}
+            >
+
+              <Text style={styles.botaoPrincipalTexto}>
+                Atualizar Status
+              </Text>
+
+            </TouchableOpacity>
+
+          </View>
+
+        )}
 
       </ScrollView>
 
       <BottomTab
         setTela={setTela}
+        tela="detalhes"
+        perfil={perfil}
       />
 
     </View>
@@ -530,5 +991,76 @@ const styles = StyleSheet.create({
     height: 220,
     borderRadius: 16,
     marginBottom: 20,
+  },
+
+  edicaoCampo: {
+    width: '60%',
+  },
+
+  selectEdicao: {
+    minHeight: 42,
+    borderWidth: 1,
+    borderColor: '#DADADA',
+    borderRadius: 10,
+    backgroundColor: '#FFF',
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
+  selectEdicaoTexto: {
+    color: '#333',
+    fontSize: 14,
+    flexShrink: 1,
+  },
+
+  selectSeta: {
+    color: '#666',
+    fontSize: 18,
+    marginLeft: 6,
+  },
+
+  opcoesEdicao: {
+    backgroundColor: '#FFF',
+    borderWidth: 1,
+    borderColor: '#E5E5E5',
+    borderRadius: 10,
+    marginTop: 6,
+    overflow: 'hidden',
+  },
+
+  opcaoEdicao: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EEEEEE',
+  },
+
+  opcaoEdicaoTexto: {
+    color: '#333',
+    fontSize: 13,
+  },
+
+  criticidadeSelect: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+
+  botaoCancelarEdicao: {
+    marginTop: 10,
+    paddingVertical: 14,
+    borderWidth: 1,
+    borderColor: '#DADADA',
+    borderRadius: 12,
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+  },
+
+  botaoCancelarEdicaoTexto: {
+    color: '#555',
+    fontWeight: 'bold',
   },
 });
