@@ -63,7 +63,11 @@ export default function PerfilScreen({
   const [modoEdicao, setModoEdicao] = useState(false);
 
   // Informações editáveis do colaborador
-  const [nome, setNome] = useState('Carlos Mendes');
+  const [nome, setNome] = useState(
+    perfil === 'Supervisor'
+      ? 'Carlos Mendes'
+      : 'João Oliveira'
+  );
 
   const [cargo, setCargo] = useState(
     perfil === 'Supervisor'
@@ -280,7 +284,11 @@ export default function PerfilScreen({
 
                 onPress={function () {
 
-                  setNome('Carlos Mendes');
+                  setNome(
+                    perfil === 'Supervisor'
+                      ? 'Carlos Mendes'
+                      : 'João Oliveira'
+                  );
                   setCargo(
                     perfil === 'Supervisor'
                       ? 'Supervisor de Conservação'
@@ -882,7 +890,7 @@ const styles = StyleSheet.create({
 
   botaoSair: {
     marginHorizontal: 24,
-    marginTop: 18,
+    marginTop: 6,
     borderWidth: 1.5,
     borderColor: '#E53935',
     borderRadius: 16,

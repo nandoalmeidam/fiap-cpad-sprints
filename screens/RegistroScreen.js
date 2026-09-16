@@ -474,7 +474,7 @@ export default function RegistroScreen({
 
               onChangeText={setKm}
 
-              keyboardType="numeric"
+              keyboardType="default"
 
               returnKeyType="next"
 

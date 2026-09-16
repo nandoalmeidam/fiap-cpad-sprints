@@ -117,10 +117,10 @@ const styles = StyleSheet.create({
 
   conteudo: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 24,
-    paddingTop: 40,
+    paddingTop: 90,
   },
 
   icone: {

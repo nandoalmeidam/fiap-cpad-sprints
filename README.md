@@ -111,11 +111,13 @@ Nesta Sprint foram priorizados:
 - ✅ Indicador de notificações não lidas
 - ✅ Integração entre notificação e ocorrência
 - ✅ Acesso aos detalhes da ocorrência
+- ✅ Opção para limpar notificações
 - ✅ Controle de notificações nas configurações
 
 ### 👤 Minha Conta
 
 - ✅ Visualização das informações do usuário
+- ✅ Diferenciação das informações por perfil de acesso
 - ✅ Edição das informações do perfil
 - ✅ Alteração de senha
 - ✅ Configuração de notificações
@@ -189,8 +191,8 @@ Funcionalidades:
 ## 01. Login
 
 <p align="center">
-  <img src="./assets/screenshots/01_LoginCampo.png" width="220">
   <img src="./assets/screenshots/01_LoginSupervisor.png" width="220">
+  <img src="./assets/screenshots/01_LoginCampo.png" width="220">
 </p>
 
 Funcionalidades:
@@ -207,13 +209,8 @@ Funcionalidades:
 ## 02. Dashboard Inicial
 
 <p align="center">
-  <img src="./assets/screenshots/02_HomeSupervisor1.png" width="220">
-  <img src="./assets/screenshots/02_HomeSupervisor2.png" width="220">
-  <img src="./assets/screenshots/02_HomeSupervisorMenu.png" width="220">
-</p>
-
-<p align="center">
-  <img src="./assets/screenshots/02_HomeSupervisorNotificacao.png" width="220">
+  <img src="./assets/screenshots/02_HomeSupervisor.png" width="220">
+  <img src="./assets/screenshots/02_HomeCampo.png" width="220">
 </p>
 
 Funcionalidades:
@@ -226,95 +223,15 @@ Funcionalidades:
 - Ranking resumido para o Supervisor
 - Acesso rápido ao registro e histórico
 - Central de notificações para o Supervisor
+- Experiência adaptada ao perfil de acesso
 - Menu de acesso à conta e logout
 
 ---
 
-## 03. Registro de Ocorrência
+## 03. Histórico de Ocorrências
 
 <p align="center">
-  <img src="./assets/screenshots/06_DetalhesOcorrenciaNova.png" width="220">
-  <img src="./assets/screenshots/06_DetalhesOcorrenciaNovoTipo.png" width="220">
-  <img src="./assets/screenshots/06_DetalhesOcorrenciaAdicionarFotoLocalizacao.png" width="220">
-</p>
-
-Funcionalidades:
-
-- Cadastro de ocorrências
-- Seleção do tipo de ocorrência
-- Definição de criticidade
-- Descrição da ocorrência
-- Registro fotográfico
-- Captura da localização atual
-- Validação dos campos obrigatórios
-- Geração dos dados do registro
-
----
-
-## 04. Confirmação de Envio
-
-<p align="center">
-  <img src="./assets/screenshots/04_ConfirmacaoEnvio.png" width="220">
-</p>
-
-Funcionalidades:
-
-- Confirmação do registro
-- Protocolo automático
-- Exibição do status inicial
-- Acesso aos detalhes do registro
-- Retorno ao dashboard
-
----
-
-## 05. Ranking de KMs Críticos
-
-<p align="center">
-  <img src="./assets/screenshots/05_RankingKMs.png" width="220">
-  <img src="./assets/screenshots/05_RankingKMsFiltro.png" width="220">
-</p>
-
-Funcionalidades:
-
-- Visualização dos trechos priorizados
-- Busca por KM
-- Filtro por criticidade
-- Classificação por prioridade
-- Recurso disponível ao perfil Supervisor
-
----
-
-## 06. Detalhes da Ocorrência
-
-<p align="center">
-  <img src="./assets/screenshots/06_DetalhesOcorrencia1.png" width="220">
-  <img src="./assets/screenshots/06_DetalhesOcorrencia2.png" width="220">
-  <img src="./assets/screenshots/06_DetalhesOcorrenciaEditar.png" width="220">
-</p>
-
-<p align="center">
-  <img src="./assets/screenshots/06_DetalhesOcorrenciaNovaAtualizado.png" width="220">
-  <img src="./assets/screenshots/06_DetalhesOcorrenciaTipos.png" width="220">
-</p>
-
-Funcionalidades:
-
-- Consulta completa da ocorrência
-- Visualização das evidências
-- Informações de localização
-- Visualização do status
-- Atualização de status
-- Edição das informações
-- Acompanhamento das alterações
-
----
-
-## 07. Histórico de Ocorrências
-
-<p align="center">
-  <img src="./assets/screenshots/07_Historico.png" width="220">
-  <img src="./assets/screenshots/07_HistoricoFiltro.png" width="220">
-  <img src="./assets/screenshots/07_HistoricoNovo.png" width="220">
+  <img src="./assets/screenshots/03_HistoricoOcorrencias.png" width="220">
 </p>
 
 Funcionalidades:
@@ -330,34 +247,131 @@ Funcionalidades:
 
 ---
 
-## 08. Minha Conta
+## 04. Confirmação de Envio
 
 <p align="center">
-  <img src="./assets/screenshots/08_Perfil.png" width="220">
-  <img src="./assets/screenshots/08_PerfilEditarInformacoes.png" width="220">
-  <img src="./assets/screenshots/08_PerfilAlterarSenha.png" width="220">
+  <img src="./assets/screenshots/04_ConfirmacaoEnvio.png" width="220">
+</p>
+
+Funcionalidades:
+
+- Confirmação visual do registro
+- Geração automática do protocolo
+- Exibição do status inicial da ocorrência
+- Retorno ao dashboard
+
+---
+
+## 05. Registro de Ocorrência
+
+<p align="center">
+  <img src="./assets/screenshots/05_RegistroOcorrenciaNovaVazio.png" width="220">
+  <img src="./assets/screenshots/05_RegistroOcorrenciaNova.png" width="220">
+  <img src="./assets/screenshots/05_RegistroOcorrenciaNova1.png" width="220">
 </p>
 
 <p align="center">
-  <img src="./assets/screenshots/08_PerfilConfiguracoes.png" width="220">
-  <img src="./assets/screenshots/08_PerfilSobre.png" width="220">
+  <img src="./assets/screenshots/05_RegistroOcorrenciaNova2.png" width="220">
+</p>
+
+Funcionalidades:
+
+- Cadastro de ocorrências
+- Preenchimento do KM da rodovia
+- Suporte ao padrão de KM, como `123+400`
+- Seleção do tipo de ocorrência
+- Definição de criticidade
+- Descrição da ocorrência
+- Registro fotográfico
+- Remoção da evidência fotográfica
+- Captura da localização atual
+- Validação dos campos obrigatórios
+- Envio da ocorrência
+
+---
+
+## 06. Detalhes da Ocorrência
+
+<p align="center">
+  <img src="./assets/screenshots/06_DetalhesOcorrencia1.png" width="220">
+  <img src="./assets/screenshots/06_DetalhesOcorrencia2.png" width="220">
+</p>
+
+Funcionalidades:
+
+- Consulta completa da ocorrência
+- Visualização do KM
+- Visualização do tipo
+- Visualização da criticidade
+- Visualização do status
+- Identificação do perfil responsável pelo registro
+- Visualização da descrição
+- Visualização da evidência fotográfica
+- Edição das informações
+- Atualização do status
+
+---
+
+## 07. Ranking de KMs Críticos
+
+<p align="center">
+  <img src="./assets/screenshots/07_RankingKmCriticos.png" width="220">
+</p>
+
+Funcionalidades:
+
+- Visualização dos trechos priorizados
+- Busca por KM
+- Filtro por criticidade
+- Classificação por pontuação
+- Priorização das ocorrências
+- Acesso rápido ao Histórico
+- Recurso disponível ao perfil Supervisor
+
+---
+
+## 08. Minha Conta
+
+### Supervisor
+
+<p align="center">
+  <img src="./assets/screenshots/08_PerfilSupervisor.png" width="220">
+</p>
+
+### Agente de Campo
+
+<p align="center">
+  <img src="./assets/screenshots/08_PerfilCampo.png" width="220">
+</p>
+
+### Senha e Configurações
+
+<p align="center">
+  <img src="./assets/screenshots/08_PerfilSupervisor1.png" width="220">
 </p>
 
 Funcionalidades:
 
 - Visualização das informações do usuário
+- Identificação do perfil de acesso
+- Avatar adaptado ao perfil
 - Edição das informações do perfil
 - Alteração de senha
 - Configuração das notificações
 - Configuração da localização GPS
-- Acesso às informações institucionais
+- Acesso às informações do aplicativo
 - Logout
 
 ---
 
 ## 09. Sobre o App
 
-Tela dedicada às informações institucionais do EcoTrack.
+<p align="center">
+  <img src="./assets/screenshots/09_Sobre.png" width="220">
+  <img src="./assets/screenshots/09_Sobre1.png" width="220">
+</p>
+
+Tela dedicada às informações institucionais e acadêmicas do EcoTrack.
 
 Funcionalidades:
 
@@ -366,6 +380,25 @@ Funcionalidades:
 - Descrição dos principais recursos
 - Informações acadêmicas
 - Identificação da equipe de desenvolvimento
+- Identificação dos integrantes e respectivos RMs
+
+---
+
+## 10. Notificações
+
+<p align="center">
+  <img src="./assets/screenshots/10_Notificacao.png" width="220">
+</p>
+
+Funcionalidades:
+
+- Centralização das notificações operacionais
+- Identificação de novas ocorrências
+- Exibição do KM e tipo da ocorrência
+- Exibição da criticidade
+- Identificação de notificações não lidas
+- Acesso à ocorrência relacionada
+- Opção para limpar as notificações
 
 ---
 
@@ -413,22 +446,24 @@ Como evolução futura, prevê-se a integração com um serviço de armazenament
 # 📂 Estrutura do Projeto
 
 ```text
-fiap-cpad-sprint2/
+fiap-cpad-sprints/
 │
-├── assets/
-│   ├── icons/
-│   ├── images/
-│   └── screenshots/
-│
-├── components/
-│
-├── context/
-│
-├── screens/
-│
-├── App.js
-│
-└── README.md
+└── ecotrack/
+    │
+    ├── assets/
+    │   ├── icons/
+    │   ├── images/
+    │   └── screenshots/
+    │
+    ├── components/
+    │
+    ├── context/
+    │
+    ├── screens/
+    │
+    ├── App.js
+    │
+    └── README.md
 ```
 
 ---
@@ -441,19 +476,25 @@ fiap-cpad-sprint2/
 git clone https://github.com/nandoalmeidam/fiap-cpad-sprints.git
 ```
 
-## 2. Acesse a pasta do projeto
+## 2. Acesse a pasta do repositório
+
+```bash
+cd fiap-cpad-sprints
+```
+
+## 3. Acesse o projeto EcoTrack
 
 ```bash
 cd ecotrack
 ```
 
-## 3. Instale as dependências
+## 4. Instale as dependências
 
 ```bash
 npm install
 ```
 
-## 4. Inicie o projeto
+## 5. Inicie o projeto
 
 ```bash
 npx expo start
@@ -478,6 +519,7 @@ Entre os cenários de teste estão:
 - Registro de nova ocorrência
 - Validação de campos obrigatórios
 - Registro de evidência fotográfica
+- Remoção de evidência fotográfica
 - Captura de localização
 - Consulta do histórico
 - Aplicação de filtros
