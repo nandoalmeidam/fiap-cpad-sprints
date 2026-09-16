@@ -45,10 +45,10 @@ Nesta Sprint foram priorizados:
 
 | Nome | RM |
 |---|---|
+| Bruno Anselmo Da Silva | RM 566521 |
 | Fernando de Almeida Godoi Martines | RM 564820 |
 | Gabriel Ber Soares Tarone | RM 563520 |
 | Guilherme de Freitas Salgado | RM 562494 |
-| Bruno Anselmo Da Silva | RM 566521 |
 | Vinicius Ribeiro Dias | RM 566468 |
 
 ---
