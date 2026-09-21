@@ -141,6 +141,11 @@ O EcoTrack possui dois perfis de acesso com diferentes responsabilidades dentro 
 
 O perfil **Supervisor** possui uma visão mais ampla das operações e acesso às funcionalidades de acompanhamento e priorização.
 
+### 🔐 Credenciais de acesso
+
+- **Usuário:** `supervisor@ecotrack.com.br`
+- **Senha:** `123456`
+
 Principais recursos:
 
 - Visualização geral das ocorrências
@@ -157,6 +162,11 @@ Principais recursos:
 ## 👷 Agente de Campo
 
 O perfil **Agente de Campo** possui uma experiência voltada ao registro e acompanhamento das atividades realizadas em campo.
+
+### 🔐 Credenciais de acesso
+
+- **Usuário:** `campo@ecotrack.com.br`
+- **Senha:** `123456`
 
 Principais recursos:
 
