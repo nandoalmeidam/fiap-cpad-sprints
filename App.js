@@ -21,11 +21,16 @@ import ConfirmacaoScreen from './screens/ConfirmacaoScreen';
 import RankingScreen from './screens/RankingScreen';
 import PerfilScreen from './screens/PerfilScreen';
 import SobreScreen from './screens/SobreScreen';
+
 import {
   NotificacoesProvider,
 } from './context/NotificacoesContext';
+
 import NotificacoesScreen from './screens/NotificacoesScreen';
-import { ConfiguracoesProvider, } from './context/ConfiguracoesContext';
+import GerenciarUsuariosScreen from './screens/GerenciarUsuariosScreen.js';
+
+import { ConfiguracoesProvider } from './context/ConfiguracoesContext';
+
 import {
   UsuarioProvider,
   useUsuario,
@@ -44,6 +49,7 @@ function AppConteudo() {
   const {
     autenticar,
     carregouUsuarios,
+    sair,
   } = useUsuario();
 
   const [usuario, setUsuario] = useState('');
@@ -81,7 +87,7 @@ function AppConteudo() {
  * informados antes de liberar o acesso
  * ao sistema.
  */
-  function validarLogin() {
+  async function validarLogin() {
 
     if (!carregouUsuarios) {
       setErro(
@@ -113,7 +119,7 @@ function AppConteudo() {
     }
 
     const resultado =
-      autenticar(
+      await autenticar(
         usuario,
         senha,
         perfil
@@ -136,7 +142,18 @@ function AppConteudo() {
  * Limpa os dados da sessão atual e retorna
  * o usuário para a tela de autenticação.
  */
-function sairDoApp() {
+async function sairDoApp() {
+
+  try {
+    await sair();
+  } catch (erro) {
+    console.log('Erro ao encerrar sessão:', erro);
+    Alert.alert(
+      'Erro ao sair',
+      'Não foi possível encerrar a sessão. Tente novamente.'
+    );
+    return;
+  }
 
   setUsuario('');
 
@@ -351,6 +368,13 @@ function sairDoApp() {
                 setFiltroHistoricoInicial={
                   setFiltroHistoricoInicial
                 }
+              />
+            )}
+
+            {/* Gerenciamento de usuários de Campo pelo Supervisor */}
+            {tela === 'gerenciarUsuarios' && perfil === 'Supervisor' && (
+              <GerenciarUsuariosScreen
+                setTela={setTela}
               />
             )}
 

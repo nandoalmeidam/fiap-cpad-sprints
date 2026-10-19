@@ -59,3 +59,4 @@ Thumbs.db
 
 # EAS Client
 eas.json
+firestore-debug.log

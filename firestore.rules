@@ -1,0 +1,62 @@
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function autenticado() {
+      return request.auth != null;
+    }
+
+    function ehSupervisor() {
+      return autenticado()
+        && get(
+          /databases/$(database)/documents/usuarios/$(request.auth.uid)
+        ).data.perfil == 'Supervisor'
+        && get(
+          /databases/$(database)/documents/usuarios/$(request.auth.uid)
+        ).data.ativo == true;
+    }
+
+    match /usuarios/{userId} {
+      allow get: if (
+        autenticado()
+        && request.auth.uid == userId
+      ) || (
+        ehSupervisor()
+        && resource.data.perfil == 'Campo'
+      );
+
+      allow list: if ehSupervisor();
+
+      allow update: if (
+        autenticado()
+        && request.auth.uid == userId
+        && resource.data.ativo == true
+        && request.resource.data.diff(resource.data)
+          .affectedKeys().hasOnly(['nome'])
+        && request.resource.data.nome is string
+        && request.resource.data.nome.size() >= 2
+        && request.resource.data.nome.size() <= 100
+      ) || (
+        ehSupervisor()
+        && resource.data.perfil == 'Campo'
+        && request.resource.data.diff(resource.data)
+          .affectedKeys()
+          .hasOnly(['equipe', 'trecho', 'regiao'])
+        && request.resource.data.equipe is string
+        && request.resource.data.trecho is string
+        && request.resource.data.regiao is string
+        && request.resource.data.equipe.size() <= 100
+        && request.resource.data.trecho.size() <= 100
+        && request.resource.data.regiao.size() <= 100
+      );
+
+      allow create, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

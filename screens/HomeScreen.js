@@ -223,15 +223,29 @@ export default function HomeScreen({
             }}
           >
 
-            <Text style={styles.menuTexto}>
-              Minha Conta
-            </Text>
+              <Text style={styles.menuTexto}>
+                Minha Conta
+              </Text>
 
-          </TouchableOpacity>
+            </TouchableOpacity>
 
+            {/* Gerenciamento exclusivo do Supervisor */}
+            {isSupervisor && (
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={function () {
+                  setMostrarMenu(false);
+                  setTela('gerenciarUsuarios');
+                }}
+              >
+                <Text style={styles.menuTexto}>
+                  Gerenciar Equipes
+                </Text>
+              </TouchableOpacity>
+            )}
 
-          {/* Encerra a sessão atual. */}
-          <TouchableOpacity
+            {/* Encerra a sessão atual. */}
+            <TouchableOpacity
             style={[
               styles.menuItem,
               {

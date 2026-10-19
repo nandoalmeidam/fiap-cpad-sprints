@@ -5,279 +5,354 @@ import {
   useState,
 } from 'react';
 
-import AsyncStorage from
-  '@react-native-async-storage/async-storage';
+import {
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
+} from 'firebase/auth';
 
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+} from 'firebase/firestore';
 
-const UsuarioContext = createContext();
+import { auth, db } from '../firebaseConfig';
 
+const UsuarioContext = createContext(null);
 
-const usuariosIniciais = [
-  {
-    id: 1,
-    nome: 'Carlos Mendes',
-    email: 'supervisor@ecotrack.com.br',
-    senha: '123456',
-    perfil: 'Supervisor',
-  },
-  {
-    id: 2,
-    nome: 'João Silva',
-    email: 'campo@ecotrack.com.br',
-    senha: '123456',
-    perfil: 'Campo',
-  },
-];
+export function UsuarioProvider({ children }) {
+  const [usuarioLogado, setUsuarioLogado] = useState(null);
+  const [carregouUsuarios, setCarregouUsuarios] = useState(false);
 
-
-export function UsuarioProvider({
-  children,
-}) {
-
-  const [
-    usuarios,
-    setUsuarios,
-  ] = useState(
-    usuariosIniciais
-  );
-
-  const [
-    carregouUsuarios,
-    setCarregouUsuarios,
-  ] = useState(false);
-
-  // Armazena o usuário autenticado
-  // durante a sessão atual.
-  const [
-    usuarioLogado,
-    setUsuarioLogado,
-  ] = useState(null);
-
-
-  /*
-   * Recupera os usuários armazenados
-   * anteriormente no dispositivo.
-   */
-  useEffect(function () {
-
-    async function carregarUsuarios() {
-
-      try {
-
-        const dados =
-          await AsyncStorage.getItem(
-            'usuarios'
-          );
-
-        if (dados) {
-
-          setUsuarios(
-            JSON.parse(dados)
-          );
-
-        }
-
-      } catch (erro) {
-
-        console.log(
-          'Erro ao carregar usuários:',
-          erro
-        );
-
-      } finally {
-
+  // Aguarda a restauração da sessão do Firebase.
+  useEffect(() => {
+    const cancelarObservador = onAuthStateChanged(
+      auth,
+      () => {
         setCarregouUsuarios(true);
-
+      },
+      (erro) => {
+        console.log('Erro na sessão Firebase:', erro);
+        setCarregouUsuarios(true);
       }
-    }
+    );
 
-    carregarUsuarios();
-
+    return cancelarObservador;
   }, []);
 
+  // Busca os dados do usuário no Firestore.
+  async function buscarPerfil(uid) {
+    const referencia = doc(db, 'usuarios', uid);
+    const resultado = await getDoc(referencia);
 
-  /*
-   * Mantém os usuários sincronizados
-   * com o armazenamento local.
-   */
-  useEffect(function () {
-
-    if (!carregouUsuarios) {
-      return;
+    if (!resultado.exists()) {
+      throw new Error('Perfil não encontrado no Firestore.');
     }
 
-    async function salvarUsuarios() {
+    return {
+      uid,
+      ...resultado.data(),
+    };
+  }
 
-      try {
-
-        await AsyncStorage.setItem(
-          'usuarios',
-          JSON.stringify(
-            usuarios
-          )
-        );
-
-      } catch (erro) {
-
-        console.log(
-          'Erro ao salvar usuários:',
-          erro
-        );
-
+    // Lista os agentes de Campo cadastrados no Firestore.
+    async function listarAgentesCampo() {
+      if (
+        !auth.currentUser ||
+        !usuarioLogado ||
+        usuarioLogado.perfil !== 'Supervisor'
+      ) {
+        throw new Error('Acesso permitido apenas ao Supervisor.');
       }
-    }
 
-    salvarUsuarios();
+      const referencia = collection(db, 'usuarios');
 
-  }, [
-    usuarios,
-    carregouUsuarios,
-  ]);
-
-
-  /*
-   * Valida as credenciais de acesso
-   * de acordo com o perfil escolhido.
-   */
-  function autenticar(
-    email,
-    senha,
-    perfil
-  ) {
-
-    const usuarioEncontrado =
-      usuarios.find(
-        function (item) {
-
-          return (
-            item.email
-              .toLowerCase() ===
-              email
-                .trim()
-                .toLowerCase() &&
-            item.senha === senha &&
-            item.perfil === perfil
-          );
-        }
+      const consulta = query(
+        referencia,
+        where('perfil', '==', 'Campo')
       );
 
-    if (!usuarioEncontrado) {
+      const resultado = await getDocs(consulta);
+
+            return resultado.docs.map((documento) => ({
+              ...documento.data(),
+              uid: documento.id,
+            }));
+          }
+
+        // Atualiza os dados operacionais de um agente de Campo.
+        async function atualizarDadosAgente(uid, equipe, trecho, regiao) {
+          if (
+            !auth.currentUser ||
+            !usuarioLogado ||
+            usuarioLogado.perfil !== 'Supervisor' ||
+            usuarioLogado.ativo !== true
+          ) {
+            return {
+              sucesso: false,
+              mensagem: 'Acesso permitido apenas ao Supervisor.',
+            };
+          }
+
+          const equipeLimpa = equipe.trim();
+          const trechoLimpo = trecho.trim();
+          const regiaoLimpa = regiao.trim();
+
+          if (
+            !uid ||
+            !equipeLimpa ||
+            !trechoLimpo ||
+            !regiaoLimpa ||
+            equipeLimpa.length > 100 ||
+            trechoLimpo.length > 100 ||
+            regiaoLimpa.length > 100
+          ) {
+            return {
+              sucesso: false,
+              mensagem: 'Preencha os campos com até 100 caracteres.',
+            };
+          }
+
+          try {
+            const referencia = doc(db, 'usuarios', uid);
+            const resultado = await getDoc(referencia);
+
+            if (
+              !resultado.exists() ||
+              resultado.data().perfil !== 'Campo'
+            ) {
+              return {
+                sucesso: false,
+                mensagem: 'Agente de Campo não encontrado.',
+              };
+            }
+
+            await updateDoc(referencia, {
+              equipe: equipeLimpa,
+              trecho: trechoLimpo,
+              regiao: regiaoLimpa,
+            });
+
+            return {
+              sucesso: true,
+              mensagem: 'Dados do agente atualizados com sucesso.',
+            };
+          } catch (erro) {
+            console.log(
+              'Erro ao atualizar agente:',
+              erro.code || erro.message
+            );
+
+            return {
+              sucesso: false,
+              mensagem: 'Não foi possível atualizar o agente.',
+            };
+          }
+        }
+
+        // Autentica e confere o perfil de acesso.
+        async function autenticar(email, senha, perfil) {
+    try {
+      const credencial = await signInWithEmailAndPassword(
+        auth,
+        email.trim().toLowerCase(),
+        senha
+      );
+
+      const dadosUsuario = await buscarPerfil(
+        credencial.user.uid
+      );
+
+      if (
+        dadosUsuario.ativo !== true ||
+        dadosUsuario.perfil !== perfil
+      ) {
+        await signOut(auth);
+
+        return {
+          sucesso: false,
+          usuario: null,
+          mensagem: 'Perfil de acesso não autorizado.',
+        };
+      }
+
+      setUsuarioLogado(dadosUsuario);
+
+      return {
+        sucesso: true,
+        usuario: dadosUsuario,
+      };
+    } catch (erro) {
+      console.log('Erro no login Firebase:', erro.code || erro.message);
+
+      await signOut(auth).catch(() => {});
+      setUsuarioLogado(null);
 
       return {
         sucesso: false,
         usuario: null,
+        mensagem:
+          erro.code === 'auth/invalid-credential'
+            ? 'E-mail ou senha incorretos.'
+            : 'Não foi possível autenticar. Verifique sua conexão e tente novamente.',
       };
-
     }
-
-    setUsuarioLogado(
-        usuarioEncontrado
-    );
-
-    return {
-      sucesso: true,
-      usuario: usuarioEncontrado,
-    };
   }
 
+  // Encerra a sessão autenticada.
+  async function sair() {
+    await signOut(auth);
+    setUsuarioLogado(null);
+  }
 
-  /*
-   * Permite alterar a senha do usuário
-   * correspondente ao perfil atual.
-   */
-  function alterarSenha(
-    perfil,
-    senhaAtual,
-    novaSenha
-  ) {
+  // Altera a senha do usuário autenticado no Firebase.
+  async function alterarSenha(perfil, senhaAtual, novaSenha) {
+    const usuario = auth.currentUser;
 
-    const usuarioEncontrado =
-      usuarios.find(
-        function (item) {
+    if (!usuario || !usuario.email || !usuarioLogado) {
+      return {
+        sucesso: false,
+        mensagem: 'Nenhum usuário autenticado.',
+      };
+    }
 
-          return (
-            item.perfil === perfil
-          );
-        }
+    if (usuarioLogado.perfil !== perfil) {
+      return {
+        sucesso: false,
+        mensagem: 'Perfil de acesso não autorizado.',
+      };
+    }
+
+    if (!senhaAtual || !novaSenha || novaSenha.length < 6) {
+      return {
+        sucesso: false,
+        mensagem: 'Verifique os campos e a nova senha.',
+      };
+    }
+
+    if (senhaAtual === novaSenha) {
+      return {
+        sucesso: false,
+        mensagem: 'A nova senha deve ser diferente da atual.',
+      };
+    }
+
+    try {
+      const credencial = EmailAuthProvider.credential(
+        usuario.email,
+        senhaAtual
       );
 
-    if (!usuarioEncontrado) {
+      await reauthenticateWithCredential(usuario, credencial);
+
+      await updatePassword(usuario, novaSenha);
+
+      return {
+        sucesso: true,
+        mensagem: 'Senha alterada com sucesso.',
+      };
+    } catch (erro) {
+      console.log(
+        'Erro ao alterar senha:',
+        erro.code || erro.message
+      );
+
+      let mensagem = 'Não foi possível alterar a senha. Tente novamente.';
+
+      if (erro.code === 'auth/invalid-credential' ||
+          erro.code === 'auth/wrong-password') {
+        mensagem = 'A senha atual está incorreta.';
+      } else if (erro.code === 'auth/weak-password') {
+        mensagem = 'A nova senha não atende aos requisitos de segurança.';
+      } else if (erro.code === 'auth/too-many-requests') {
+        mensagem = 'Muitas tentativas. Aguarde e tente novamente.';
+      } else if (erro.code === 'auth/network-request-failed') {
+        mensagem = 'Erro de conexão. Verifique sua internet.';
+      }
+
+      return {
+        sucesso: false,
+        mensagem,
+      };
+    }
+  }
+
+  // Atualiza o nome do usuário autenticado no Firestore.
+  async function atualizarNome(novoNome) {
+    const usuario = auth.currentUser;
+    const nomeLimpo = novoNome.trim();
+
+    if (!usuario || !usuarioLogado) {
+      return {
+        sucesso: false,
+        mensagem: 'Nenhum usuário autenticado.',
+      };
+    }
+
+    if (nomeLimpo.length < 2 || nomeLimpo.length > 100) {
+      return {
+        sucesso: false,
+        mensagem: 'O nome deve ter entre 2 e 100 caracteres.',
+      };
+    }
+
+    try {
+      const referencia = doc(db, 'usuarios', usuario.uid);
+
+      await updateDoc(referencia, {
+        nome: nomeLimpo,
+      });
+
+      setUsuarioLogado((anterior) => ({
+        ...anterior,
+        nome: nomeLimpo,
+      }));
+
+      return {
+        sucesso: true,
+        mensagem: 'Nome atualizado com sucesso.',
+      };
+    } catch (erro) {
+      console.log(
+        'Erro ao atualizar nome:',
+        erro.code || erro.message
+      );
 
       return {
         sucesso: false,
         mensagem:
-          'Usuário não encontrado.',
+          'Não foi possível atualizar o nome no Firestore.',
       };
     }
-
-
-    if (
-      usuarioEncontrado.senha !==
-      senhaAtual
-    ) {
-
-      return {
-        sucesso: false,
-        mensagem:
-          'A senha atual está incorreta.',
-      };
-    }
-
-
-    setUsuarios(function (
-      usuariosAtuais
-    ) {
-
-      return usuariosAtuais.map(
-        function (item) {
-
-          if (
-            item.id ===
-            usuarioEncontrado.id
-          ) {
-
-            return {
-              ...item,
-              senha: novaSenha,
-            };
-          }
-
-          return item;
-        }
-      );
-    });
-
-
-    return {
-      sucesso: true,
-      mensagem:
-        'Senha alterada com sucesso.',
-    };
   }
 
-
-  return (
-
-    <UsuarioContext.Provider
-      value={{
-        usuarios,
-        usuarioLogado,
-        carregouUsuarios,
-        autenticar,
-        alterarSenha,
-      }}
-    >
+    return (
+      <UsuarioContext.Provider
+        value={{
+          usuarioLogado,
+          carregouUsuarios,
+          autenticar,
+          listarAgentesCampo,
+          atualizarDadosAgente,
+          alterarSenha,
+          atualizarNome,
+          sair,
+        }}
+      >
 
       {children}
-
     </UsuarioContext.Provider>
   );
 }
 
-
 export function useUsuario() {
-
-  return useContext(
-    UsuarioContext
-  );
+  return useContext(UsuarioContext);
 }

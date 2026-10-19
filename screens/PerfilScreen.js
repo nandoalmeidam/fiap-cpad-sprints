@@ -38,6 +38,8 @@ export default function PerfilScreen({
 
   const {
     alterarSenha,
+    usuarioLogado,
+    atualizarNome,
   } = useUsuario();
 
   // Controla a exibição das configurações do aplicativo
@@ -63,23 +65,12 @@ export default function PerfilScreen({
   const [modoEdicao, setModoEdicao] = useState(false);
 
   // Informações editáveis do colaborador
-  const [nome, setNome] = useState(
-    perfil === 'Supervisor'
-      ? 'Carlos Mendes'
-      : 'João Oliveira'
-  );
+  const [nome, setNome] = useState(usuarioLogado?.nome || '');
+  const [cargo, setCargo] = useState(usuarioLogado?.cargo || '');
 
-  const [cargo, setCargo] = useState(
-    perfil === 'Supervisor'
-      ? 'Supervisor de Conservação'
-      : 'Agente de Campo'
-  );
-
-  const [equipe, setEquipe] = useState('Frente 03');
-
-  const [trecho, setTrecho] = useState('SP-270');
-
-  const [regiao, setRegiao] = useState('Sorocaba - SP');
+  const [equipe, setEquipe] = useState(usuarioLogado?.equipe || '');
+  const [trecho, setTrecho] = useState(usuarioLogado?.trecho || '');
+  const [regiao, setRegiao] = useState(usuarioLogado?.regiao || '');
 
   return (
     <View style={styles.container}>
@@ -191,7 +182,7 @@ export default function PerfilScreen({
               Equipe
             </Text>
 
-            {modoEdicao ? (
+            {modoEdicao && perfil === 'Supervisor' ? (
 
               <TextInput
                 style={styles.inputInfo}
@@ -220,20 +211,16 @@ export default function PerfilScreen({
               Trecho
             </Text>
 
-            {modoEdicao ? (
-
+            {modoEdicao && perfil === 'Supervisor' ? (
               <TextInput
                 style={styles.inputInfo}
                 value={trecho}
                 onChangeText={setTrecho}
               />
-
             ) : (
-
               <Text style={styles.infoValor}>
                 {trecho}
               </Text>
-
             )}
 
           </View>
@@ -256,20 +243,16 @@ export default function PerfilScreen({
               Região
             </Text>
 
-            {modoEdicao ? (
-
+            {modoEdicao && perfil === 'Supervisor' ? (
               <TextInput
                 style={styles.inputInfo}
                 value={regiao}
                 onChangeText={setRegiao}
               />
-
             ) : (
-
               <Text style={styles.infoValor}>
                 {regiao}
               </Text>
-
             )}
 
           </View>
@@ -284,16 +267,11 @@ export default function PerfilScreen({
 
                 onPress={function () {
 
-                  setNome(
-                    perfil === 'Supervisor'
-                      ? 'Carlos Mendes'
-                      : 'João Oliveira'
-                  );
-                  setCargo(
-                    perfil === 'Supervisor'
-                      ? 'Supervisor de Conservação'
-                      : 'Agente de Campo'
-                  );
+                  // Restaura os dados originais do Firestore.
+                  setNome(usuarioLogado?.nome || '');
+                  setCargo(usuarioLogado?.cargo || '');
+
+                  // Restaura os valores operacionais locais.
                   setEquipe('Frente 03');
                   setTrecho('SP-270');
                   setRegiao('Sorocaba - SP');
@@ -312,22 +290,31 @@ export default function PerfilScreen({
               <TouchableOpacity
                 style={styles.botaoSalvar}
 
-                onPress={function () {
+                onPress={async function () {
 
+                  const resultado = await atualizarNome(nome);
+
+                  if (!resultado.sucesso) {
+                    Alert.alert(
+                      'Erro ao salvar',
+                      resultado.mensagem
+                    );
+                    return;
+                  }
+
+                  setNome(nome.trim());
                   setModoEdicao(false);
 
                   Alert.alert(
                     'Perfil',
-                    'Informações atualizadas com sucesso.'
+                    'Nome atualizado com sucesso no Firestore.'
                   );
 
                 }}
               >
-
                 <Text style={styles.botaoSalvarTexto}>
                   Salvar alterações
                 </Text>
-
               </TouchableOpacity>
 
             </View>
@@ -464,7 +451,7 @@ export default function PerfilScreen({
               <TouchableOpacity
                 style={styles.botaoSalvarSenha}
 
-                onPress={function () {
+                onPress={async function () {
 
                   if (
                     !senhaAtual ||
@@ -505,7 +492,7 @@ export default function PerfilScreen({
                   }
 
                   const resultado =
-                    alterarSenha(
+                    await alterarSenha(
                       perfil,
                       senhaAtual,
                       novaSenha
