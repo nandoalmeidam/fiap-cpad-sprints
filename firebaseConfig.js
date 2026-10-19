@@ -13,6 +13,7 @@ import {
 } from 'firebase/auth';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getStorage } from 'firebase/storage';
 
 // Configuração local para testes no Android Emulator.
 const USAR_EMULADORES = false;
@@ -65,3 +66,6 @@ if (USAR_EMULADORES) {
 }
 
 export { app, auth };
+
+
+export const storage = getStorage(app);

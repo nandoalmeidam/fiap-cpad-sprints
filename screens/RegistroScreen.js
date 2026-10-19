@@ -357,9 +357,15 @@ export default function RegistroScreen({
           : '#5FAF6D',
     };
 
-    adicionarOcorrencia(
-      novaOcorrencia
-    );
+    setCarregando(true);
+    let ocorrenciaSalva;
+    try {
+      ocorrenciaSalva = await adicionarOcorrencia(novaOcorrencia);
+    } catch (erro) {
+      setCarregando(false);
+      alert('Erro ao registrar ocorrência: ' + (erro.message || erro));
+      return;
+    }
 
     /*
     * Registros realizados pelo Agente de Campo
@@ -373,7 +379,7 @@ export default function RegistroScreen({
           'NOT-' + dataRegistro,
 
         ocorrenciaId:
-          novaOcorrencia.id,
+          ocorrenciaSalva.id,
 
         destinatario:
           'Supervisor',
@@ -399,7 +405,7 @@ export default function RegistroScreen({
     }
 
     setOcorrenciaSelecionada(
-      novaOcorrencia
+      ocorrenciaSalva
     );
 
     setCarregando(true);

@@ -559,14 +559,14 @@ export default function DetalhesScreen({
                 style={styles.botaoSalvarDescricao}
 
                 // Persiste a nova descrição no contexto global.
-                onPress={function () {
+                onPress={async function () {
 
                   const novosDadosCriticidade =
                     obterDadosCriticidade(
                       criticidade
                     );
 
-                  editarOcorrencia(
+                  try { await editarOcorrencia(
                     ocorrencia.id,
                     {
 
@@ -587,6 +587,10 @@ export default function DetalhesScreen({
                       dataAlteracao: Date.now(),
                     }
                   );
+                  } catch (erro) {
+                    Alert.alert('Erro ao salvar', erro.message);
+                    return;
+                  }
 
                   setMostrarTipos(false);
 
@@ -660,15 +664,13 @@ export default function DetalhesScreen({
                       {
                         text: 'Excluir',
 
-                        onPress: function () {
-
-                          removerOcorrencia(
-                            ocorrencia.id
-                          );
-
-                          setTela(
-                            'historico'
-                          );
+                        onPress: async function () {
+                          try {
+                            await removerOcorrencia(ocorrencia.id);
+                            setTela('historico');
+                          } catch (erro) {
+                            Alert.alert('Erro ao excluir', erro.message);
+                          }
                         },
                       },
                     ]
@@ -737,7 +739,7 @@ export default function DetalhesScreen({
                     {
                       text: 'Sim',
 
-                      onPress: function () {
+                      onPress: async function () {
 
                         let novoStatus =
                           ocorrenciaAtual.status;
@@ -762,9 +764,12 @@ export default function DetalhesScreen({
                         const dataAlteracao =
                           Date.now();
 
-                        atualizarStatus(
-                          ocorrenciaAtual.id
-                        );
+                        try {
+                          await atualizarStatus(ocorrenciaAtual.id);
+                        } catch (erro) {
+                          Alert.alert('Erro ao atualizar status', erro.message);
+                          return;
+                        }
 
                         setOcorrenciaSelecionada({
                           ...ocorrenciaAtual,

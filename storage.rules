@@ -1,0 +1,45 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function usuarioAtivo() {
+      return request.auth != null
+        && firestore.exists(
+          /databases/(default)/documents/usuarios/$(request.auth.uid)
+        )
+        && firestore.get(
+          /databases/(default)/documents/usuarios/$(request.auth.uid)
+        ).data.ativo == true;
+    }
+
+    function ehSupervisor() {
+      return usuarioAtivo()
+        && firestore.get(
+          /databases/(default)/documents/usuarios/$(request.auth.uid)
+        ).data.perfil == 'Supervisor';
+    }
+
+    match /ocorrencias/{userId}/{arquivo} {
+
+      allow read: if usuarioAtivo();
+
+      allow create: if usuarioAtivo()
+        && request.auth.uid == userId
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+
+      allow delete: if usuarioAtivo()
+        && (
+          request.auth.uid == userId
+          || ehSupervisor()
+        );
+
+      allow update: if false;
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
