@@ -60,3 +60,8 @@ Thumbs.db
 # EAS Client
 eas.json
 firestore-debug.log
+
+# Arquivos de assistentes de IA
+.claude/
+CLAUDE.md
+AGENTS.md
