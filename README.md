@@ -3,9 +3,7 @@
 ### Sprint 4 — Entrega Final | Cross-Platform Application Development | FIAP
 
 <p align="center">
-
-  <img src="./assets/images/logoTitulo.png" width="400">
-
+  <img src="./assets/images/logoTitulo.png" alt="Logo EcoTrack" width="400">
 </p>
 
 ---
@@ -16,61 +14,7 @@ O **EcoTrack** é uma aplicação mobile desenvolvida para o **Challenge Motiva*
 
 A aplicação permite registrar ocorrências, anexar evidências fotográficas, capturar localização, acompanhar o histórico dos registros, consultar indicadores operacionais, visualizar rankings de criticidade e gerenciar informações de acordo com o perfil de acesso do usuário.
 
-Ao longo das quatro Sprints, o projeto evoluiu de um protótipo navegável para uma aplicação funcional com autenticação, perfis de acesso, ocorrências e evidências fotográficas integrados aos serviços Firebase. Os fluxos principais foram testados em um dispositivo Android físico. A publicação e a validação do APK definitivo ainda estão pendentes.
-
----
-
-## 🎯 Evolução funcional — Sprint 3
-
-Consolidar o EcoTrack como uma aplicação funcional e navegável, garantindo que os principais fluxos estejam integrados e que cada perfil de usuário tenha acesso às funcionalidades adequadas às suas atividades.
-
-Nesta Sprint foram priorizados:
-
-- Consolidação dos fluxos desenvolvidos nas Sprints anteriores
-
-- Diferenciação de funcionalidades por perfil de acesso
-
-- Navegação completa entre as telas
-
-- Evolução do dashboard operacional
-
-- Acesso rápido aos registros por meio dos indicadores da Home
-
-- Registro e acompanhamento de ocorrências
-
-- Evidências fotográficas e localização
-
-- Histórico com filtros e pesquisa
-
-- Ranking de criticidade
-
-- Central de notificações
-
-- Gerenciamento de conta e preferências
-
-- Persistência local de dados
-
-- Tratamento de diferentes cenários utilizando dados simulados
-
-- Padronização visual e melhoria da experiência de uso
-
----
-
-## 👥 Equipe
-
-\| Nome | RM |
-
-\|---|---|
-
-\| Bruno Anselmo Da Silva | RM 566521 |
-
-\| Fernando de Almeida Godoi Martines | RM 564820 |
-
-\| Gabriel Ber Soares Tarone | RM 563520 |
-
-\| Guilherme de Freitas Salgado | RM 562494 |
-
-\| Vinicius Ribeiro Dias | RM 566468 |
+Ao longo das quatro Sprints, o projeto evoluiu de um protótipo navegável para uma aplicação funcional com autenticação, perfis de acesso, ocorrências e evidências fotográficas integrados aos serviços Firebase. Os fluxos principais foram testados em um dispositivo Android físico.
 
 ---
 
@@ -227,6 +171,7 @@ Principais recursos:
 - Consulta de detalhes
 
 - Atualização das ocorrências
+
 - Gerenciamento de equipes e dados operacionais de agentes de Campo
 
 - Registro de novas ocorrências
@@ -260,9 +205,7 @@ Principais recursos:
 ## 00. Splash Screen
 
 <p align="center">
-
-  <img src="./assets/screenshots/00_Inicio.png" width="220">
-
+  <img src="./assets/screenshots/00_Inicio.png" alt="Splash Screen EcoTrack" width="220">
 </p>
 
 Tela de abertura responsável por apresentar a identidade visual do EcoTrack durante a inicialização da aplicação.
@@ -280,11 +223,8 @@ Funcionalidades:
 ## 01. Login
 
 <p align="center">
-
-  <img src="./assets/screenshots/01_LoginSupervisor.png" width="220">
-
-  <img src="./assets/screenshots/01_LoginCampo.png" width="220">
-
+  <img src="./assets/screenshots/01_LoginSupervisor.png" width="220">
+  <img src="./assets/screenshots/01_LoginCampo.png" width="220">
 </p>
 
 Funcionalidades:
@@ -306,11 +246,8 @@ Funcionalidades:
 ## 02. Dashboard Inicial
 
 <p align="center">
-
-  <img src="./assets/screenshots/02_HomeSupervisor.png" width="220">
-
-  <img src="./assets/screenshots/02_HomeCampo.png" width="220">
-
+  <img src="./assets/screenshots/02_HomeSupervisor.png" width="220">
+  <img src="./assets/screenshots/02_HomeCampo.png" width="220">
 </p>
 
 Funcionalidades:
@@ -340,9 +277,7 @@ Funcionalidades:
 ## 03. Histórico de Ocorrências
 
 <p align="center">
-
-  <img src="./assets/screenshots/03_HistoricoOcorrencias.png" width="220">
-
+  <img src="./assets/screenshots/03_HistoricoOcorrencias.png" width="220">
 </p>
 
 Funcionalidades:
@@ -368,9 +303,7 @@ Funcionalidades:
 ## 04. Confirmação de Envio
 
 <p align="center">
-
-  <img src="./assets/screenshots/04_ConfirmacaoEnvio.png" width="220">
-
+  <img src="./assets/screenshots/04_ConfirmacaoEnvio.png" width="220">
 </p>
 
 Funcionalidades:
@@ -388,19 +321,12 @@ Funcionalidades:
 ## 05. Registro de Ocorrência
 
 <p align="center">
-
-  <img src="./assets/screenshots/05_RegistroOcorrenciaNovaVazio.png" width="220">
-
-  <img src="./assets/screenshots/05_RegistroOcorrenciaNova.png" width="220">
-
-  <img src="./assets/screenshots/05_RegistroOcorrenciaNova1.png" width="220">
-
+  <img src="./assets/screenshots/05_RegistroOcorrenciaNovaVazio.png" width="220">
+  <img src="./assets/screenshots/05_RegistroOcorrenciaNova.png" width="220">
+  <img src="./assets/screenshots/05_RegistroOcorrenciaNova1.png" width="220">
 </p>
-
 <p align="center">
-
-  <img src="./assets/screenshots/05_RegistroOcorrenciaNova2.png" width="220">
-
+  <img src="./assets/screenshots/05_RegistroOcorrenciaNova2.png" width="220">
 </p>
 
 Funcionalidades:
@@ -432,11 +358,8 @@ Funcionalidades:
 ## 06. Detalhes da Ocorrência
 
 <p align="center">
-
-  <img src="./assets/screenshots/06_DetalhesOcorrencia1.png" width="220">
-
-  <img src="./assets/screenshots/06_DetalhesOcorrencia2.png" width="220">
-
+  <img src="./assets/screenshots/06_DetalhesOcorrencia1.png" width="220">
+  <img src="./assets/screenshots/06_DetalhesOcorrencia2.png" width="220">
 </p>
 
 Funcionalidades:
@@ -458,6 +381,7 @@ Funcionalidades:
 - Visualização da evidência fotográfica
 
 - Edição das informações
+
 - Exclusão de ocorrências pelo Supervisor
 
 - Atualização do status
@@ -467,9 +391,7 @@ Funcionalidades:
 ## 07. Ranking de KMs Críticos
 
 <p align="center">
-
-  <img src="./assets/screenshots/07_RankingKmCriticos.png" width="220">
-
+  <img src="./assets/screenshots/07_RankingKmCriticos.png" width="220">
 </p>
 
 Funcionalidades:
@@ -495,25 +417,19 @@ Funcionalidades:
 ### Supervisor
 
 <p align="center">
-
-  <img src="./assets/screenshots/08_PerfilSupervisor.png" width="220">
-
+  <img src="./assets/screenshots/08_PerfilSupervisor.png" width="220">
 </p>
 
 ### Agente de Campo
 
 <p align="center">
-
-  <img src="./assets/screenshots/08_PerfilCampo.png" width="220">
-
+  <img src="./assets/screenshots/08_PerfilCampo.png" width="220">
 </p>
 
 ### Senha e Configurações
 
 <p align="center">
-
-  <img src="./assets/screenshots/08_PerfilSupervisor1.png" width="220">
-
+  <img src="./assets/screenshots/08_PerfilSupervisor1.png" width="220">
 </p>
 
 Funcionalidades:
@@ -541,11 +457,8 @@ Funcionalidades:
 ## 09. Sobre o App
 
 <p align="center">
-
-  <img src="./assets/screenshots/09_Sobre.png" width="220">
-
-  <img src="./assets/screenshots/09_Sobre1.png" width="220">
-
+  <img src="./assets/screenshots/09_Sobre.png" width="220">
+  <img src="./assets/screenshots/09_Sobre1.png" width="220">
 </p>
 
 Tela dedicada às informações institucionais e acadêmicas do EcoTrack.
@@ -569,9 +482,7 @@ Funcionalidades:
 ## 10. Notificações
 
 <p align="center">
-
-  <img src="./assets/screenshots/10_Notificacao.png" width="220">
-
+  <img src="./assets/screenshots/10_Notificacao.png" width="220">
 </p>
 
 Funcionalidades:
@@ -610,7 +521,7 @@ Os cenários contemplam diferentes:
 
 - Notificações
 
-Os testes manuais realizados apoiam a validação dos principais fluxos da aplicação. A execução dos testes não substitui uma bateria automatizada ou uma homologação em ambiente de produção.
+Os testes manuais realizados apoiam a validação dos principais fluxos da aplicação.
 
 ---
 
@@ -645,6 +556,7 @@ As fotos selecionadas no dispositivo são redimensionadas e comprimidas em JPEG 
 - Cloud Firestore
 
 - Firebase Storage
+
 - Expo Image Manipulator
 
 ---
@@ -654,75 +566,40 @@ As fotos selecionadas no dispositivo são redimensionadas e comprimidas em JPEG 
 O projeto **EcoTrack está na raiz do repositório GitHub** `fiap-cpad-sprints`. O nome `ecotrack` pode ser usado para a pasta local no computador de um integrante, mas **não é uma subpasta do repositório clonado**.
 
 ```text
-
 fiap-cpad-sprints/
-
 ├── assets/
-
-│   ├── icons/
-
-│   ├── images/
-
-│   └── screenshots/
-
+│   ├── icons/
+│   ├── images/
+│   └── screenshots/
 ├── components/
-
-│   └── BottomTab.js
-
+│   └── BottomTab.js
 ├── context/
-
-│   ├── ConfiguracoesContext.js
-
-│   ├── NotificacoesContext.js
-
-│   ├── OcorrenciasContext.js
-
-│   └── UsuarioContext.js
-
+│   ├── ConfiguracoesContext.js
+│   ├── NotificacoesContext.js
+│   ├── OcorrenciasContext.js
+│   └── UsuarioContext.js
 ├── screens/
-
-│   ├── ConfirmacaoScreen.js
-
-│   ├── DetalhesScreen.js
-
-│   ├── GerenciarUsuariosScreen.js
-
-│   ├── HistoricoScreen.js
-
-│   ├── HomeScreen.js
-
-│   ├── NotificacoesScreen.js
-
-│   ├── PerfilScreen.js
-
-│   ├── RankingScreen.js
-
-│   ├── RegistroScreen.js
-
-│   ├── SobreScreen.js
-
-│   └── SplashScreen.js
-
+│   ├── ConfirmacaoScreen.js
+│   ├── DetalhesScreen.js
+│   ├── GerenciarUsuariosScreen.js
+│   ├── HistoricoScreen.js
+│   ├── HomeScreen.js
+│   ├── NotificacoesScreen.js
+│   ├── PerfilScreen.js
+│   ├── RankingScreen.js
+│   ├── RegistroScreen.js
+│   ├── SobreScreen.js
+│   └── SplashScreen.js
 ├── App.js
-
 ├── index.js
-
 ├── app.json
-
 ├── eas.json
-
 ├── firebaseConfig.js
-
 ├── firebase.json
-
 ├── firestore.rules
-
 ├── package.json
-
 ├── package-lock.json
-
 └── README.md
-
 ```
 
 > A listagem representa os principais arquivos e diretórios do aplicativo. Outros arquivos de configuração e suporte podem estar presentes.
@@ -761,8 +638,6 @@ cd fiap-cpad-sprints
 
 ```
 
-**Não execute `cd ecotrack` nem `cd sprints-cpad-2026`.** Essas pastas não existem dentro do repositório clonado.
-
 ## 3. Instalar as dependências
 
 ```bash
@@ -781,7 +656,8 @@ npx expo start
 
 ## 5. Abrir o aplicativo
 
-- **Android físico:** abra o Expo Go e leia o QR Code exibido pelo Expo, quando compatível com a versão do projeto.
+
+- **Dispositivo Android físico:** instale o aplicativo Expo Go, disponível na Google Play Store. Em seguida, abra o Expo Go e escaneie o QR Code gerado pelo servidor de desenvolvimento para executar o EcoTrack no dispositivo.
 
 - **Emulador Android:** inicie o emulador e pressione `a` no terminal do Expo.
 
@@ -791,7 +667,22 @@ npx expo start
 
 O EcoTrack utiliza **Firebase Authentication** para autenticação, **Cloud Firestore** para perfis, equipes e ocorrências e **Firebase Storage** para imagens. O envio e a visualização de evidências fotográficas foram testados no aplicativo.
 
-O arquivo `firebaseConfig.js` contém a configuração do projeto Firebase. Para acessar o ambiente real, `USAR_EMULADORES` deve estar como `false`. O uso do aplicativo requer uma conta autorizada no Firebase Authentication e um documento de perfil correspondente no Firestore. **Não publique senhas, contas administrativas ou credenciais privadas neste README.**
+O arquivo `firebaseConfig.js` contém a configuração do projeto Firebase. Para acessar o ambiente real, `USAR_EMULADORES` deve estar como `false`. O uso do aplicativo requer uma conta autorizada no Firebase Authentication e um documento de perfil correspondente no Firestore.
+
+---
+
+## 🔐 Acesso para Avaliação Acadêmica
+
+O EcoTrack disponibiliza duas contas de demonstração para permitir a avaliação das funcionalidades da aplicação, respeitando os diferentes níveis de acesso.
+
+| Perfil | E-mail | Funcionalidades disponíveis |
+|---|---|---|
+| **Supervisor** | supervisor@ecotrack.com.br | Gerenciamento de equipes, acompanhamento de ocorrências, ranking, atualização de status e administração operacional |
+| **Agente de Campo** | campo@ecotrack.com.br | Registro de ocorrências, envio de evidências fotográficas, captura de localização e acompanhamento dos próprios registros |
+
+**Credenciais de acesso:** as senhas das contas de demonstração serão disponibilizadas ao professor no material privado de entrega acadêmica.
+
+**Observação:** as contas são destinadas exclusivamente à avaliação do projeto EcoTrack — Sprint 4.
 
 ---
 
@@ -843,137 +734,178 @@ Entre os cenários de teste estão:
 
 # 🏁 Sprint 4 — Entrega Final
 
-## Situação da entrega
+### Situação da entrega
 
-\| Item | Situação |
+| Item | Situação |
+|---|---|
+| Autenticação com Firebase e gerenciamento de agentes | ✅ Concluído — Implementado e testado |
+| Cloud Firestore e regras de acesso | ✅ Concluído — Configurado, publicado e validado |
+| Firebase Storage e evidências fotográficas | ✅ Concluído — Upload, compressão e visualização testados |
+| Persistência de ocorrências no Firestore | ✅ Concluído — Cadastro, consulta, edição e exclusão validados |
+| Correções decorrentes dos testes da Sprint 3 | ✅ Concluído — Correções implementadas e testadas |
+| APK Android instalável | ✅ Concluído — Versão final disponibilizada para avaliação |
+| Plano de negócio | ✅ Concluído — Proposta documentada |
+| Pitch e demonstração (até 5 minutos) | ✅ Concluído — Vídeo finalizado para apresentação |
+| README consolidado | ✅ Concluído — Documentação final atualizada |
 
-\|---|---|
 
-\| Autenticação com Firebase e gerenciamento de agentes | Implementado e testado nos fluxos principais |
+## 📦 Download e Instalação — APK Android
 
-\| Configuração do Cloud Firestore e regras de acesso | Implementado; regras publicadas e testes funcionais realizados |
+O EcoTrack disponibiliza sua versão Android em formato APK, permitindo a instalação e execução do aplicativo diretamente em dispositivos compatíveis, sem a necessidade do Expo Go ou de um ambiente de desenvolvimento.
 
-\| Bucket e regras do Firebase Storage | Implementado; envio e visualização de fotos testados |
+### 🔗 Download da versão final
 
-\| Persistência de ocorrências no Firestore | Implementada e testada |
+**[Baixar EcoTrack — GitHub Releases](https://github.com/nandoalmeidam/fiap-cpad-sprints/releases/latest)**
 
-\| Correções decorrentes dos testes da Sprint 3 | Correções implementadas; revisão do APK final pendente |
+O arquivo de instalação está disponível na seção **Assets** da página de lançamento. Selecione o arquivo com extensão `.apk` para realizar o download.
 
-\| APK Android instalável | Nova build final pendente de geração e teste |
 
-\| Plano de negócio | Versão preliminar abaixo; validar com a equipe |
+### 📱 Como instalar no Android
 
-\| Pitch e demonstração (até 5 minutos) | Pendente |
+1. Acesse o link de download pelo navegador do dispositivo Android.
+2. Na seção **Assets**, baixe o arquivo `.apk` disponibilizado.
+3. Abra o arquivo baixado para iniciar a instalação.
+4. Caso solicitado, autorize a instalação de aplicativos provenientes dessa fonte nas configurações do Android.
+5. Conclua a instalação e abra o **EcoTrack**.
+6. Utilize as contas de demonstração descritas na seção [Acesso para Avaliação Acadêmica](#-acesso-para-avaliação-acadêmica).
 
-\| README consolidado | Atualizado para o estado funcional da Sprint 4; links finais pendentes |
-
-## 📦 APK Android
-
-**Link de download:** [ADICIONAR LINK DO APK FINAL APÓS A BUILD E TESTE]
-
-**Status:** APK definitivo ainda não publicado. Será gerada uma nova build após as últimas correções, seguida de instalação e teste em dispositivo Android.
-
-### Como instalar (após disponibilização)
-
-1. Abra o link acima em um dispositivo Android.
-
-2. Baixe o arquivo `.apk` da versão final.
-
-3. Autorize a instalação do arquivo pelo navegador ou gerenciador de arquivos, caso o Android solicite.
-
-4. Instale e abra o EcoTrack.
-
-5. Utilize credenciais de teste fornecidas pela equipe de forma privada. Não publique senhas no README.
-
-> O APK será hospedado externamente (por exemplo, GitHub Releases ou Google Drive), sem inclusão do binário nos commits do repositório.
+> **Observação:** o APK funciona independentemente do Expo Go. É necessária uma conexão com a internet para autenticação e sincronização dos dados.
 
 ## 🎥 Vídeo final
 
-**Pitch e demonstração (até 5 minutos):** [ADICIONAR LINK DO YOUTUBE NÃO LISTADO APÓS PUBLICAÇÃO]
-
-O vídeo deverá apresentar a equipe, o problema, o aplicativo instalado e funcionando, o modelo de negócio e o impacto esperado para a Motiva, com participação dos integrantes.
+**Pitch e demonstração (até 5 minutos):** [Clique aqui para acessar](https://youtube.com).
 
 ---
 
-# 💼 Plano de Negócio — Proposta Preliminar
+# 💼 Plano de Negócio — EcoTrack
 
-> As definições abaixo são uma proposta para discussão e aprovação do grupo; não representam contrato, preço oficial ou resultado comprovado na Motiva.
+O EcoTrack apresenta um modelo de negócio voltado à modernização dos processos de conservação e monitoramento rodoviário, utilizando tecnologia móvel para centralizar informações, organizar ocorrências e apoiar a tomada de decisões operacionais.
 
-### Proposta de valor
+O plano de negócio contempla a proposta de valor, o público-alvo, o modelo de receita, a estrutura de custos, os diferenciais competitivos, os riscos operacionais e o impacto esperado da solução.
 
-Centralizar registros de conservação da faixa de domínio, evidências fotográficas e informações de localização em um aplicativo móvel, facilitando a triagem e o acompanhamento de ocorrências por equipes operacionais e supervisores.
+### Proposta de Valor
 
-### Público-alvo e personas
+O EcoTrack oferece uma solução digital para centralizar registros de conservação da faixa de domínio, evidências fotográficas e informações de geolocalização em um aplicativo móvel.
 
-- **Agente de campo:** registra ocorrências e evidências durante inspeções e acompanha o andamento das solicitações.
+A plataforma facilita a comunicação entre agentes de campo e supervisores, promovendo maior organização, rastreabilidade e acompanhamento das ocorrências identificadas durante inspeções rodoviárias.
 
-- **Supervisor de conservação:** consulta indicadores, filtra ocorrências, identifica trechos prioritários e organiza o acompanhamento das equipes.
+### Público-Alvo e Personas
 
-- **Cliente institucional:** concessionárias rodoviárias e empresas responsáveis pela conservação e operação de rodovias.
+O EcoTrack foi desenvolvido considerando três públicos principais:
 
-### Modelo de receita proposto
+- **Agente de Campo:** responsável por registrar ocorrências, anexar evidências fotográficas, informar a localização e acompanhar o andamento dos registros realizados.
 
-Licenciamento **B2B por concessionária ou unidade operacional**, com mensalidade por faixa de usuários ativos e possibilidade de serviços adicionais de implantação, treinamento e suporte. Os valores dependerão de um piloto e da definição de escopo.
+- **Supervisor de Conservação:** responsável por consultar o histórico de ocorrências, utilizar filtros, acompanhar indicadores de criticidade, atualizar registros e apoiar a organização das atividades operacionais.
 
-### Custos operacionais a estimar
+- **Cliente Institucional:** concessionárias rodoviárias e empresas responsáveis pela conservação, manutenção e operação de rodovias, interessadas em soluções digitais para gestão e monitoramento.
 
-Hospedagem e uso de Firebase (autenticação, banco e armazenamento), manutenção do aplicativo, suporte, monitoramento, distribuição Android, capacitação de usuários e eventuais integrações com sistemas corporativos. **Os custos monetários ainda precisam ser estimados e aprovados pelo grupo.**
+### Modelo de Receita
 
-### Diferenciais
+O modelo comercial proposto para o EcoTrack é o **Business-to-Business (B2B)**, direcionado a concessionárias rodoviárias e unidades operacionais.
 
-- Fluxos distintos para Agente de Campo e Supervisor.
+A monetização está estruturada em:
 
-- Registro fotográfico e geolocalização associados às ocorrências.
+- **Licenciamento por assinatura:** contratação mensal ou anual, considerando o número de usuários e a dimensão da operação.
+- **Implantação e configuração:** preparação da solução para utilização pela organização contratante.
+- **Treinamento:** capacitação de agentes de campo e supervisores.
+- **Suporte e manutenção:** atendimento técnico, correções e atualizações do aplicativo.
+- **Integrações corporativas:** serviços adicionais para conexão com sistemas utilizados pelas concessionárias.
 
-- Histórico pesquisável, filtros e ranking de criticidade.
+A precificação comercial considera fatores como quantidade de usuários, infraestrutura necessária, armazenamento de evidências e serviços contratados.
 
-- Experiência mobile voltada às rotinas de conservação rodoviária.
+### Estrutura de Custos Operacionais
 
-### Riscos e mitigação
+A estrutura de custos do EcoTrack contempla os recursos necessários para manter a aplicação disponível, segura e atualizada.
 
-- **Conectividade em campo:** avaliar estratégia offline e sincronização em evolução futura.
+Os principais componentes são:
 
-- **Custos variáveis de nuvem:** configurar alertas orçamentários e acompanhar consumo; alertas não bloqueiam gastos.
+- **Infraestrutura em nuvem:** Firebase Authentication, Cloud Firestore e Firebase Storage.
+- **Manutenção do aplicativo:** correções, atualizações e melhorias contínuas.
+- **Suporte técnico:** atendimento aos usuários e resolução de problemas operacionais.
+- **Monitoramento e segurança:** acompanhamento dos serviços, controle de acessos e proteção das informações.
+- **Distribuição Android:** geração, publicação e atualização das versões instaláveis do aplicativo.
+- **Capacitação de usuários:** treinamentos e materiais de orientação.
+- **Integrações corporativas:** desenvolvimento e manutenção de conexões com sistemas externos, quando contratadas.
 
-- **Proteção de dados e acessos:** regras de segurança, autenticação e revisão periódica de permissões.
+Os custos operacionais variam de acordo com o consumo dos serviços, o número de usuários ativos e a estrutura contratada.
 
-- **Adoção operacional:** executar piloto, treinamento e coleta de feedback.
+### Diferenciais Competitivos
 
-### Impacto esperado
+O EcoTrack reúne funcionalidades voltadas às necessidades das equipes de conservação rodoviária.
 
-Melhor rastreabilidade dos registros, padronização de evidências e apoio à priorização de intervenções. Esses benefícios são **esperados** e deverão ser medidos em um piloto, não sendo apresentados como resultados já comprovados.
+Seus principais diferenciais são:
+
+- **Perfis de acesso distintos:** funcionalidades específicas para Agente de Campo e Supervisor.
+- **Registro de evidências:** associação de fotografias e localização às ocorrências.
+- **Histórico centralizado:** consulta e acompanhamento dos registros realizados.
+- **Filtros operacionais:** organização das ocorrências por critérios relevantes para a gestão.
+- **Ranking de criticidade:** apoio à identificação de trechos que demandam maior atenção.
+- **Persistência em nuvem:** armazenamento e sincronização das informações utilizando Firebase.
+- **Experiência mobile:** interface desenvolvida para utilização em dispositivos Android durante as rotinas operacionais.
+
+### Riscos e Estratégias de Mitigação
+
+A análise de riscos considera fatores técnicos, financeiros, operacionais e de segurança.
+
+- **Conectividade em campo:** a operação depende de acesso à internet para comunicação com os serviços em nuvem. Uma estratégia de armazenamento offline e sincronização posterior constitui uma possibilidade de evolução da solução.
+
+- **Custos variáveis de infraestrutura:** o consumo dos serviços Firebase pode variar conforme o volume de registros, usuários e fotografias. O controle financeiro pode ser realizado por meio do acompanhamento de utilização e da configuração de alertas orçamentários.
+
+- **Proteção de dados e controle de acesso:** a aplicação utiliza autenticação Firebase e regras de segurança para restringir operações conforme as permissões estabelecidas. A manutenção dessas proteções requer acompanhamento periódico.
+
+- **Adoção operacional:** a utilização da plataforma em uma organização depende da capacitação dos profissionais, da adequação aos processos internos e da avaliação de sua aplicação em condições reais.
+
+### Impacto Esperado
+
+O EcoTrack busca contribuir para a melhoria dos processos de conservação rodoviária por meio dos seguintes benefícios:
+
+- **Maior rastreabilidade:** acompanhamento das ocorrências registradas pelas equipes.
+- **Padronização das informações:** organização de descrições, fotografias e localizações.
+- **Eficiência operacional:** redução da dispersão de informações entre diferentes meios de registro.
+- **Apoio à priorização:** identificação de ocorrências e trechos que demandam maior atenção.
+- **Visibilidade gerencial:** acesso centralizado às informações pelos supervisores.
+- **Potencial de escalabilidade:** possibilidade de expansão para outras equipes e unidades operacionais.
+
+Esses benefícios representam os resultados esperados da adoção da solução. Sua mensuração quantitativa depende de utilização e avaliação em ambiente operacional real.
+
+### Conclusão do Plano de Negócio
+
+O plano de negócio do EcoTrack está **concluído como parte da entrega acadêmica da Sprint 4**, apresentando uma proposta estruturada de comercialização, operação e evolução da plataforma.
+
+A solução combina funcionalidades de registro e acompanhamento de ocorrências com um modelo comercial B2B, direcionado às necessidades de concessionárias e organizações responsáveis pela conservação rodoviária.
+
+O projeto apresenta uma base tecnológica e uma proposta de valor definidas, com potencial para aplicação e expansão em ambientes operacionais.
 
 ---
 
 # 📅 Resumo das Quatro Sprints
 
-\| Sprint | Evolução |
+| Sprint | Evolução e Entregas |
+|---|---|
+| **Sprint 1** | Desenvolvimento da estrutura inicial do EcoTrack, definição da identidade visual, organização das telas e implementação dos primeiros fluxos do protótipo. |
+| **Sprint 2** | Implementação e evolução das funcionalidades de login, registro de ocorrências, histórico, detalhes, ranking de criticidade, perfil do usuário e configurações. |
+| **Sprint 3** | Consolidação da navegação, diferenciação entre os perfis Supervisor e Agente de Campo, indicadores operacionais, notificações, filtros, evidências fotográficas e testes funcionais do protótipo. |
+| **Sprint 4** | Conclusão da integração com Firebase Authentication, Cloud Firestore e Firebase Storage; gerenciamento de equipes e permissões; persistência de ocorrências e fotografias; validação dos fluxos no Android; implementação de melhorias de segurança; consolidação da documentação; disponibilização do APK Android pelo GitHub Releases e finalização do vídeo de apresentação. |
 
-\|---|---|
+### 🏁 Conclusão do Projeto
 
-\| **Sprint 1** | Estrutura inicial do aplicativo, identidade visual e primeiros fluxos do protótipo. |
+O EcoTrack concluiu seu ciclo de desenvolvimento acadêmico ao longo das quatro sprints, evoluindo de um protótipo inicial para uma aplicação móvel integrada aos serviços Firebase.
 
-\| **Sprint 2** | Evolução de login, registro de ocorrências, histórico, detalhes, ranking, perfil e configurações. |
+A entrega final da Sprint 4 reúne as funcionalidades implementadas, os testes funcionais realizados, a documentação técnica, o plano de negócio, o APK Android e o vídeo de apresentação.
 
-\| **Sprint 3** | Consolidação da navegação, diferenciação por perfil, indicadores, notificações, filtros, evidências e testes do protótipo. |
-
-\| **Sprint 4** | Autenticação, perfis, gerenciamento de equipes, ocorrências e fotos integrados ao Firebase; testes funcionais no Android; ajustes finais de perfil e segurança. APK definitivo e vídeo de apresentação ainda pendentes. |
+**Status do projeto: Concluído — Sprint 4 | Entrega Final CPAD — FIAP.**
 
 ---
 
-# 📄 Entrega Acadêmica
+## 👥 Equipe de Desenvolvimento
 
-A entrega final da disciplina será **um arquivo `.txt`**, contendo:
-
-- Nome completo e RM de cada integrante;
-
-- Link do repositório GitHub final com este README;
-
-- Link de download do APK Android;
-
-- Link do vídeo final no YouTube, configurado como não listado.
-
-**Repositório:** https://github.com/nandoalmeidam/fiap-cpad-sprints
+| Integrante | RM |
+|---|---|
+| Bruno Anselmo Da Silva | 566521 |
+| Fernando de Almeida Godoi Martines | 564820 |
+| Gabriel Ber Soares Tarone | 563520 |
+| Guilherme de Freitas Salgado | 562494 |
+| Vinicius Ribeiro Dias | 566468 |
 
 ---
 

@@ -353,7 +353,7 @@ async function sairDoApp() {
                   </TouchableOpacity>
 
                   <Text style={styles.versao}>
-                    Versão 3.0.11
+                    Versão 4.0.12
                   </Text>
                 </View>
               </SafeAreaView>
