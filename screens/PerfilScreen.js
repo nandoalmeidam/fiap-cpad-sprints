@@ -39,7 +39,7 @@ export default function PerfilScreen({
   const {
     alterarSenha,
     usuarioLogado,
-    atualizarNome,
+    atualizarPerfil,
   } = useUsuario();
 
   // Controla a exibição das configurações do aplicativo
@@ -266,18 +266,13 @@ export default function PerfilScreen({
                 style={styles.botaoCancelar}
 
                 onPress={function () {
-
-                  // Restaura os dados originais do Firestore.
                   setNome(usuarioLogado?.nome || '');
                   setCargo(usuarioLogado?.cargo || '');
-
-                  // Restaura os valores operacionais locais.
-                  setEquipe('Frente 03');
-                  setTrecho('SP-270');
-                  setRegiao('Sorocaba - SP');
+                  setEquipe(usuarioLogado?.equipe || '');
+                  setTrecho(usuarioLogado?.trecho || '');
+                  setRegiao(usuarioLogado?.regiao || '');
 
                   setModoEdicao(false);
-
                 }}
               >
 
@@ -291,8 +286,12 @@ export default function PerfilScreen({
                 style={styles.botaoSalvar}
 
                 onPress={async function () {
-
-                  const resultado = await atualizarNome(nome);
+                  const resultado = await atualizarPerfil({
+                    nome,
+                    equipe,
+                    trecho,
+                    regiao,
+                  });
 
                   if (!resultado.sucesso) {
                     Alert.alert(
@@ -303,13 +302,16 @@ export default function PerfilScreen({
                   }
 
                   setNome(nome.trim());
+                  setEquipe(equipe.trim());
+                  setTrecho(trecho.trim());
+                  setRegiao(regiao.trim());
+
                   setModoEdicao(false);
 
                   Alert.alert(
-                    'Perfil',
-                    'Nome atualizado com sucesso no Firestore.'
+                    'Perfil atualizado',
+                    'Seus dados foram atualizados com sucesso!'
                   );
-
                 }}
               >
                 <Text style={styles.botaoSalvarTexto}>

@@ -29,26 +29,38 @@ service cloud.firestore {
       allow list: if ehSupervisor();
 
       allow update: if (
-        autenticado()
-        && request.auth.uid == userId
-        && resource.data.ativo == true
-        && request.resource.data.diff(resource.data)
-          .affectedKeys().hasOnly(['nome'])
-        && request.resource.data.nome is string
-        && request.resource.data.nome.size() >= 2
-        && request.resource.data.nome.size() <= 100
-      ) || (
-        ehSupervisor()
-        && resource.data.perfil == 'Campo'
-        && request.resource.data.diff(resource.data)
-          .affectedKeys().hasOnly(['equipe', 'trecho', 'regiao'])
-        && request.resource.data.equipe is string
-        && request.resource.data.trecho is string
-        && request.resource.data.regiao is string
-        && request.resource.data.equipe.size() <= 100
-        && request.resource.data.trecho.size() <= 100
-        && request.resource.data.regiao.size() <= 100
-      );
+      // O usuário pode atualizar os próprios dados de perfil.
+      autenticado()
+      && request.auth.uid == userId
+      && resource.data.ativo == true
+      && request.resource.data.diff(resource.data)
+        .affectedKeys().hasOnly([
+          'nome', 'equipe', 'trecho', 'regiao'
+        ])
+      && request.resource.data.nome is string
+      && request.resource.data.nome.size() >= 2
+      && request.resource.data.nome.size() <= 100
+      && request.resource.data.get('equipe', '') is string
+      && request.resource.data.get('trecho', '') is string
+      && request.resource.data.get('regiao', '') is string
+      && request.resource.data.get('equipe', '').size() <= 100
+      && request.resource.data.get('trecho', '').size() <= 100
+      && request.resource.data.get('regiao', '').size() <= 100
+    ) || (
+      // O Supervisor pode gerenciar dados operacionais de agentes.
+      ehSupervisor()
+      && resource.data.perfil == 'Campo'
+      && request.resource.data.diff(resource.data)
+        .affectedKeys().hasOnly([
+          'equipe', 'trecho', 'regiao'
+        ])
+      && request.resource.data.equipe is string
+      && request.resource.data.trecho is string
+      && request.resource.data.regiao is string
+      && request.resource.data.equipe.size() <= 100
+      && request.resource.data.trecho.size() <= 100
+      && request.resource.data.regiao.size() <= 100
+    );
 
       allow create, delete: if false;
     }

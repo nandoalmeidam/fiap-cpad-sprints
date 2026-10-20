@@ -334,6 +334,74 @@ export function UsuarioProvider({ children }) {
     }
   }
 
+  // Atualiza as informações do perfil do usuário autenticado.
+  async function atualizarPerfil(dados) {
+    const usuario = auth.currentUser;
+
+    if (!usuario || !usuarioLogado) {
+      return {
+        sucesso: false,
+        mensagem: 'Nenhum usuário autenticado.',
+      };
+    }
+
+    const nomeLimpo = (dados.nome || '').trim();
+    const equipeLimpa = (dados.equipe || '').trim();
+    const trechoLimpo = (dados.trecho || '').trim();
+    const regiaoLimpa = (dados.regiao || '').trim();
+
+    if (nomeLimpo.length < 2 || nomeLimpo.length > 100) {
+      return {
+        sucesso: false,
+        mensagem: 'O nome deve ter entre 2 e 100 caracteres.',
+      };
+    }
+
+    if (
+      equipeLimpa.length > 100 ||
+      trechoLimpo.length > 100 ||
+      regiaoLimpa.length > 100
+    ) {
+      return {
+        sucesso: false,
+        mensagem: 'Equipe, trecho e região devem ter até 100 caracteres.',
+      };
+    }
+
+    try {
+      const referencia = doc(db, 'usuarios', usuario.uid);
+
+      const dadosAtualizados = {
+        nome: nomeLimpo,
+        equipe: equipeLimpa,
+        trecho: trechoLimpo,
+        regiao: regiaoLimpa,
+      };
+
+      await updateDoc(referencia, dadosAtualizados);
+
+      setUsuarioLogado((anterior) => ({
+        ...anterior,
+        ...dadosAtualizados,
+      }));
+
+      return {
+        sucesso: true,
+        mensagem: 'Seus dados foram atualizados com sucesso!',
+      };
+    } catch (erro) {
+      console.log(
+        'Erro ao atualizar perfil:',
+        erro.code || erro.message
+      );
+
+      return {
+        sucesso: false,
+        mensagem: 'Não foi possível atualizar o perfil.',
+      };
+    }
+  }
+
     return (
       <UsuarioContext.Provider
         value={{
@@ -344,6 +412,7 @@ export function UsuarioProvider({ children }) {
           atualizarDadosAgente,
           alterarSenha,
           atualizarNome,
+          atualizarPerfil,
           sair,
         }}
       >
