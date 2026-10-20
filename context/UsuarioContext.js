@@ -54,7 +54,7 @@ export function UsuarioProvider({ children }) {
     const resultado = await getDoc(referencia);
 
     if (!resultado.exists()) {
-      throw new Error('Perfil não encontrado no Firestore.');
+      throw new Error('Não foi possível encontrar o perfil do usuário.');
     }
 
     return {
@@ -329,7 +329,7 @@ export function UsuarioProvider({ children }) {
       return {
         sucesso: false,
         mensagem:
-          'Não foi possível atualizar o nome no Firestore.',
+          'Não foi possível atualizar o nome. Tente novamente.',
       };
     }
   }
