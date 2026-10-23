@@ -773,7 +773,7 @@ O arquivo de instalação está disponível na seção **Assets** da página de 
 
 ## 🎥 Vídeo final
 
-**Pitch e demonstração (até 5 minutos):** [Clique aqui para acessar](https://youtube.com).
+**Pitch e demonstração (até 5 minutos):** [Clique aqui para acessar](https://youtu.be/eVUkzFXtAzE).
 
 ---
 
