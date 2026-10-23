@@ -92,13 +92,24 @@ async function prepararFoto(uri) {
     }
   );
 
+  console.log('URI original da foto:', uri);
+  console.log('URI da foto processada:', imagem.uri);
+
   const resposta = await fetch(imagem.uri);
 
+  console.log('Status da leitura da foto:', resposta.status);
+  console.log('Resposta OK:', resposta.ok);
+
   if (!resposta.ok) {
-    throw new Error('Não foi possível processar a foto selecionada.');
+    throw new Error(
+      'Não foi possível processar a foto selecionada. Status: ' +
+      resposta.status
+    );
   }
 
   const blob = await resposta.blob();
+
+  console.log('Tamanho da foto processada:', blob.size);
 
   if (blob.size >= LIMITE_FOTO) {
     throw new Error(
